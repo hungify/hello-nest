@@ -1,0 +1,49 @@
+# Variables
+@baseUrl=http://localhost:8000/api
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpZCI6MSwiaWF0IjoxNjY0NTQzMDc4LCJleHAiOjE2NjQ1NDY2Nzh9.-VyOmQsWx3EGGt1uTxTzHzwy8Zsm55p8WikD2Kopd9M
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpZCI6MSwiaWF0IjoxNjY0NTQzMDc4LCJleHAiOjE2NjQ3MTU4Nzh9._5wYxR-sNgAyOtRFth3sgAcRyGRJk75OQ8jPrWQPWRE
+
+### Auth ###
+
+# @name Register
+POST {{baseUrl}}/auth/register  HTTP/1.1
+Content-Type: application/json
+
+{
+		"fullName": "Example",
+		"email": "example@example.com",
+		"password": "example"
+}
+
+###
+
+# @name Login
+POST {{baseUrl}}/auth/login  HTTP/1.1
+Content-Type: application/json
+
+{
+		"email": "example@example.com",
+		"password": "example"
+}
+
+###
+
+# @name Refresh Token
+GET {{baseUrl}}/auth/refresh-token HTTP/1.1
+Content-Type: application/json
+Cookie: refreshToken={{refreshToken}}
+
+###
+
+# @name Logout
+GET {{baseUrl}}/auth/logout HTTP/1.1
+Content-Type: application/json
+Cookie: refreshToken={{refreshToken}}
+
+###
+
+# @name me
+
+GET {{baseUrl}}/auth/me HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
