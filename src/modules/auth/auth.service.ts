@@ -36,7 +36,7 @@ export class AuthService {
       sameSite: true,
       secure: nodeEnv === 'production',
       maxAge: ms(refreshTokenExpiresIn),
-      path: '/refresh-token',
+      path: '/',
     };
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -55,9 +55,8 @@ export class AuthService {
     );
     if (isUserExist) throw new ConflictException('User already exists');
 
-    registerAuthDto.password = await this.passwordService.hash(
-      registerAuthDto.password,
-    );
+    const password = await this.passwordService.hash(registerAuthDto.password);
+    Object.assign(registerAuthDto, { password });
 
     const newUser = await this.authRepository.create(registerAuthDto);
 

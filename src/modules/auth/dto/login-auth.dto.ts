@@ -1,11 +1,6 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { OmitType } from '@nestjs/swagger';
+import { RegisterAuthDto } from './register-auth.dto';
 
-export class LoginAuthDto {
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
-
-  @IsNotEmpty()
-  @MinLength(6)
-  password: string;
-}
+export class LoginAuthDto extends OmitType(RegisterAuthDto, [
+  'fullName',
+] as const) {}

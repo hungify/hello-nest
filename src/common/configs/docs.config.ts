@@ -1,18 +1,20 @@
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { SwaggerConfig } from '../interfaces/config.interface';
+import { HttpConfig, SwaggerConfig } from '../interfaces/config.interface';
 
 export const setupApiDocs = (app: INestApplication) => {
   const configService = app.get(ConfigService);
   const swaggerConfig = configService.get<SwaggerConfig>('swagger');
+  const { host, port } = configService.get<HttpConfig>('http');
+  const httpServer = `http://${host}:${port}/api`;
 
   if (swaggerConfig.enabled) {
     const options = new DocumentBuilder()
-      .setTitle(swaggerConfig.title || 'Nestjs')
-      .setDescription(swaggerConfig.description || 'The nestjs API description')
-      .setVersion(swaggerConfig.version || '1.0')
-      .addServer(configService.get<string>('SWAGGER_API_URL') || '/')
+      .setTitle(swaggerConfig.title)
+      .setDescription(swaggerConfig.description)
+      .setVersion(swaggerConfig.version)
+      .addServer(httpServer)
       .addSecurity('defaultBearerAuth', {
         description: `Please enter token in following format: Bearer <JWT>`,
         name: 'Authorization',
@@ -22,8 +24,16 @@ export const setupApiDocs = (app: INestApplication) => {
         in: 'header',
       })
       .build();
-    const document = SwaggerModule.createDocument(app, options);
+    const document = SwaggerModule.createDocument(app, options, {
+      ignoreGlobalPrefix: true,
+    });
 
-    SwaggerModule.setup(swaggerConfig.path || '/api/docs', app, document);
+    SwaggerModule.setup(swaggerConfig.path, app, document, {
+      useGlobalPrefix: true,
+      swaggerOptions: {
+        tagsSorter: 'alpha',
+        operationsSorter: 'alpha',
+      },
+    });
   }
 };

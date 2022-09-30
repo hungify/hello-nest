@@ -4,9 +4,9 @@ import { CorsConfig } from '../interfaces/config.interface';
 
 export const setupApiCors = (app: INestApplication) => {
   const configService = app.get(ConfigService);
-  const corsConfig = configService.get<CorsConfig>('cors');
+  const { enabled, origin } = configService.get<CorsConfig>('cors');
 
-  if (corsConfig.enabled) {
-    app.enableCors();
-  }
+  app.enableCors({
+    origin: enabled ? origin : '*',
+  });
 };

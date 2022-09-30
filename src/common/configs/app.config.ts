@@ -15,14 +15,15 @@ export default (): AppConfig => ({
   },
   cors: {
     origin: process.env.CORS_ORIGIN,
-    enabled: process.env.NODE_ENV !== 'development',
+    enabled:
+      process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test',
   },
   swagger: {
     title: process.env.SWAGGER_TITLE,
     description: process.env.SWAGGER_DESCRIPTION,
     version: process.env.SWAGGER_VERSION,
     tag: process.env.SWAGGER_TAG,
-    enabled: process.env.NODE_ENV !== 'development',
+    enabled: process.env.NODE_ENV === 'development',
     path: process.env.SWAGGER_PATH,
   },
   logger: {

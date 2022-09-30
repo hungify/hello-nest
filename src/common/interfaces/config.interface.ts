@@ -1,6 +1,6 @@
 export interface CorsConfig {
   enabled: boolean;
-  origin: string;
+  origin: string | string[];
 }
 
 export interface SwaggerConfig {
