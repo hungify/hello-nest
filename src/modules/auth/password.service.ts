@@ -1,13 +1,13 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcrypt';
-import { SecurityConfig } from 'src/common/interfaces';
+import type { SecurityConfig } from '~/common/interfaces';
 
 @Injectable()
 export class PasswordService {
   constructor(private configService: ConfigService) {}
 
-  get bcryptSaltRounds() {
+  private get bcryptSaltRounds() {
     const { saltRounds } = this.configService.get<SecurityConfig>('security');
     return saltRounds;
   }
@@ -16,7 +16,8 @@ export class PasswordService {
     try {
       return compare(password, hashedPassword);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      if (error instanceof Error)
+        throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -24,7 +25,8 @@ export class PasswordService {
     try {
       return hash(password, this.bcryptSaltRounds);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      if (error instanceof Error)
+        throw new InternalServerErrorException(error.message);
     }
   }
 }

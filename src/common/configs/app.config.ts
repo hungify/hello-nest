@@ -1,4 +1,4 @@
-import { AppConfig } from '../interfaces';
+import type { AppConfig } from '../interfaces';
 
 export default (): AppConfig => ({
   http: {
@@ -15,7 +15,7 @@ export default (): AppConfig => ({
   },
   cors: {
     origin: process.env.CORS_ORIGIN,
-    enabled:
+    isEnabled:
       process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test',
   },
   swagger: {
@@ -23,7 +23,7 @@ export default (): AppConfig => ({
     description: process.env.SWAGGER_DESCRIPTION,
     version: process.env.SWAGGER_VERSION,
     tag: process.env.SWAGGER_TAG,
-    enabled: process.env.NODE_ENV === 'development',
+    isEnabled: process.env.NODE_ENV === 'development',
     path: process.env.SWAGGER_PATH,
   },
   logger: {

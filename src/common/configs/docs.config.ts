@@ -1,7 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import type { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpConfig, SwaggerConfig } from '../interfaces/config.interface';
+import type { HttpConfig, SwaggerConfig } from '../interfaces/config.interface';
 
 export const setupApiDocs = (app: INestApplication) => {
   const configService = app.get(ConfigService);
@@ -9,7 +9,7 @@ export const setupApiDocs = (app: INestApplication) => {
   const { host, port } = configService.get<HttpConfig>('http');
   const httpServer = `http://${host}:${port}/api`;
 
-  if (swaggerConfig.enabled) {
+  if (swaggerConfig.isEnabled) {
     const options = new DocumentBuilder()
       .setTitle(swaggerConfig.title)
       .setDescription(swaggerConfig.description)

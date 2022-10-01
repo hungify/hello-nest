@@ -8,7 +8,7 @@ export class AppController {
 
   @Get()
   @ApiExcludeEndpoint()
-  welcome(): any {
+  welcome(): unknown {
     return this.appService.welcome();
   }
 }

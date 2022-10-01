@@ -16,13 +16,13 @@ import {
   ApiUnauthorizedResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { Request, Response } from 'express';
-import { GetUser } from 'src/common/decorators/user.decorator';
+import type { Request, Response } from 'express';
+import { GetUser } from '~/common/decorators/user.decorator';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { JwtGuard } from './guards/jwt.guard';
-import { AuthJwtPayload } from './interfaces/auth.interface';
+import type { AuthJwtPayload } from './interfaces/auth.interface';
 import { JwtPayloadResponse, UserResponse } from './models/auth';
 
 @ApiTags('Auth')

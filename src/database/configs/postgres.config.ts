@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import path from 'path';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import type { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 interface ConnectionOptions extends PostgresConnectionOptions {
   keepConnectionAlive: boolean;

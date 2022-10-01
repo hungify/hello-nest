@@ -28,7 +28,7 @@ export class CoffeesController {
   @ApiForbiddenResponse({ description: 'Forbidden.' })
   @Get()
   async findAll(
-    @Protocol('https') protocol: number,
+    @Protocol('https') _protocol: number,
     @Query() paginationQuery: PaginationQueryDto,
   ) {
     return this.coffeesService.findAll(paginationQuery);

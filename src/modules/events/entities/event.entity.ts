@@ -3,14 +3,14 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Event {
   @PrimaryGeneratedColumn()
-  id: string;
+  readonly id: string;
 
   @Column()
-  type: string;
+  readonly type: string;
 
   @Column()
-  name: string;
+  readonly name: string;
 
   @Column('json')
-  payload: Record<string, any>;
+  readonly payload: Record<string, unknown>;
 }

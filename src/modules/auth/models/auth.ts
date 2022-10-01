@@ -1,5 +1,5 @@
-import { User } from 'src/modules/users/entities/user.entity';
-import { AuthJwtPayload } from '../interfaces/auth.interface';
+import { User } from '~/modules/users/entities/user.entity';
+import type { AuthJwtPayload } from '~auth/interfaces/auth.interface';
 
 export class UserResponse extends User {}
 

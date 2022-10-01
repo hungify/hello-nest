@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { Request } from 'express';
-import { SecurityConfig } from 'src/common/interfaces';
-import { AuthJwtPayload, TokenType } from './interfaces/auth.interface';
+import type { Request } from 'express';
+import type { SecurityConfig } from '~/common/interfaces';
+import type { AuthJwtPayload, TokenType } from './interfaces/auth.interface';
 
 @Injectable()
 export class JWTService {
@@ -44,7 +44,8 @@ export class JWTService {
       const options = this.jwtOptions(type);
       return await this.jwtService.signAsync(payload, options);
     } catch (error) {
-      throw new InternalServerErrorException(error.message);
+      if (error instanceof Error)
+        throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -60,11 +61,13 @@ export class JWTService {
         email: payload.email,
       };
     } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token expired');
-      } else if (error.name === 'JsonWebTokenError') {
-        throw new BadRequestException('Invalid token');
-      } else throw new InternalServerErrorException(error.message);
+      if (error instanceof Error) {
+        if (error.name === 'TokenExpiredError')
+          throw new UnauthorizedException('Token expired');
+        else if (error.name === 'JsonWebTokenError')
+          throw new BadRequestException('Invalid token');
+        else throw new InternalServerErrorException(error.message);
+      }
     }
   }
 
@@ -73,10 +76,10 @@ export class JWTService {
     type: 'bearer' | 'cookie',
   ) {
     let tokenKey: string, bearer: string;
-    const tokenType = typeof reqOrToken === 'string';
+    const isTokenType = typeof reqOrToken === 'string';
 
-    if (type === 'bearer' || tokenType) {
-      [bearer, tokenKey] = tokenType
+    if (type === 'bearer' || isTokenType) {
+      [bearer, tokenKey] = isTokenType
         ? reqOrToken.split(' ')
         : reqOrToken.headers['authorization'].split(' ');
     } else {

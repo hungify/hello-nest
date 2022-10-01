@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { HttpConfig } from 'src/common/interfaces';
+import type { HttpConfig } from '~/common/interfaces';
 
 @Injectable()
 export class AppService {
   constructor(private readonly configService: ConfigService) {}
-  welcome(): any {
+  welcome(): unknown {
     const { host, port } = this.configService.get<HttpConfig>('http');
     return {
       title: 'Welcome to NestJS API Stater',

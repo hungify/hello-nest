@@ -7,12 +7,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CookieOptions, Request, Response } from 'express';
+import type { CookieOptions, Request, Response } from 'express';
 import ms from 'ms';
-import { SecurityConfig } from 'src/common/interfaces';
-import { LoginAuthDto } from './dto/login-auth.dto';
-import { RegisterAuthDto } from './dto/register-auth.dto';
-import { AuthJwtPayload } from './interfaces/auth.interface';
+import type { SecurityConfig } from '~/common/interfaces';
+import type { LoginAuthDto } from './dto/login-auth.dto';
+import type { RegisterAuthDto } from './dto/register-auth.dto';
+import type { AuthJwtPayload } from './interfaces/auth.interface';
 import { JWTService } from './jwt.service';
 import { PasswordService } from './password.service';
 import { AuthRepository } from './repositories/auth.repository';
@@ -139,7 +139,9 @@ export class AuthService {
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw new BadRequestException(error.message);
-      } else throw new InternalServerErrorException(error.message);
+      } else if (error instanceof Error) {
+        throw new InternalServerErrorException(error.message);
+      }
     }
   }
 }
