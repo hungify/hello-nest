@@ -1,15 +1,41 @@
 version: '3.9'
-
 services:
-  db:
+  nest-api:
+    container_name: Nest API
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/app
+      - /home/app/node_modules
+    command: yarn staer:dev
+    env_file:
+      - .env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+    restart: unless-stopped
+    links:
+      - pg
+    depends_on:
+      - pg
+    networks:
+      - db-network
+
+  pg:
     image: postgres:14-alpine
     restart: always
+    container_name: postgres
+    env_file:
+      - .env
     ports:
-      - 5432:5432
-    environment:
-      POSTGRES_PASSWORD: pass123
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    networks:
+      - db-network
+    volumes:
+      - .docker/postgres:/postgres
 
   pgadmin:
     container_name: pgadmin4
@@ -21,3 +47,6 @@ services:
       PGADMIN_LISTEN_PORT: 80
     ports:
       - '5000:80'
+networks:
+  db-network:
+    driver: bridge
