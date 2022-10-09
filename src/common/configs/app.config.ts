@@ -1,6 +1,7 @@
 import type { AppConfig } from '../interfaces';
 
 export default (): AppConfig => ({
+  baseClientUrl: process.env.BASE_CLIENT_URL,
   http: {
     host: process.env.HOST || 'localhost',
     port: parseInt(process.env.PORT, 10) || 3000,
@@ -31,4 +32,12 @@ export default (): AppConfig => ({
     logDir: process.env.LOG_DIR,
   },
   nodeEnv: process.env.NODE_ENV as 'development' | 'production' | 'test',
+  gmail: {
+    clientId: process.env.GMAIL_CLIENT_ID,
+    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+    user: process.env.GMAIL_USER,
+    password: process.env.GMAIL_PASSWORD,
+    redirectUri: process.env.GMAIL_REDIRECT_URI,
+  },
 });

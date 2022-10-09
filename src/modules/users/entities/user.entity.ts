@@ -26,4 +26,11 @@ export class User extends BaseModel {
   })
   @Column()
   password: string;
+
+  @ApiProperty({
+    example: 'example',
+    description: 'The verify code of User',
+  })
+  @Column({ default: false })
+  isVerified: boolean;
 }

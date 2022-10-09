@@ -31,6 +31,14 @@ export interface HttpConfig {
   timeout: number;
 }
 
+export interface GmailConfig {
+  user: string;
+  password: string;
+  clientId: string;
+  clientSecret: string;
+  refreshToken: string;
+  redirectUri: string;
+}
 export interface AppConfig {
   http: HttpConfig;
   cors: CorsConfig;
@@ -38,4 +46,6 @@ export interface AppConfig {
   security: SecurityConfig;
   logger: LoggerConfig;
   nodeEnv: 'development' | 'production' | 'test';
+  baseClientUrl: string;
+  gmail: GmailConfig;
 }

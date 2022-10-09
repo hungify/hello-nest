@@ -13,6 +13,7 @@ import type { SecurityConfig } from '~/common/interfaces';
 import type { LoginAuthDto } from './dto/login-auth.dto';
 import type { RegisterAuthDto } from './dto/register-auth.dto';
 import type { AuthJwtPayload } from './interfaces/auth.interface';
+import { EmailService } from './email.service';
 import { JWTService } from './jwt.service';
 import { PasswordService } from './password.service';
 import { AuthRepository } from './repositories/auth.repository';
@@ -24,6 +25,7 @@ export class AuthService {
     private readonly passwordService: PasswordService,
     private readonly jwtService: JWTService,
     private readonly configService: ConfigService,
+    private readonly emailService: EmailService,
   ) {}
 
   private async signInTokenAndCookie(payload: AuthJwtPayload, res: Response) {
@@ -45,24 +47,59 @@ export class AuthService {
     ]);
 
     res.cookie('refreshToken', refreshToken, cookieOptions);
-
     return accessToken;
   }
 
-  async register(registerAuthDto: RegisterAuthDto) {
-    const isUserExist = await this.authRepository.findOne(
-      registerAuthDto.email,
-    );
+  async register({ email, fullName, password }: RegisterAuthDto) {
+    const isUserExist = await this.authRepository.findOne(email);
     if (isUserExist) throw new ConflictException('User already exists');
 
-    const password = await this.passwordService.hash(registerAuthDto.password);
-    Object.assign(registerAuthDto, { password });
+    const passwordHashed = await this.passwordService.hash(password);
+    Object.assign({ password: passwordHashed });
+    const newUser = await this.authRepository.create({
+      email,
+      fullName,
+      password: passwordHashed,
+    });
 
-    const newUser = await this.authRepository.create(registerAuthDto);
+    const baseClientUrl = this.configService.get<string>('baseClientUrl');
+    const payload = {
+      email: newUser.email,
+      id: newUser.id,
+    };
+    const accessToken = await this.jwtService.signInToken(
+      payload,
+      'accessToken',
+    );
 
-    newUser.password = undefined;
-    newUser.id = undefined;
-    return newUser;
+    const verifyUrl = `${baseClientUrl}/auth/verify?token=${accessToken}`;
+
+    await this.emailService.sendEmail({
+      verifyUrl,
+      email,
+      subject: 'Verify your email',
+      type: 'register',
+    });
+
+    return {
+      message: 'Please check your email to verify your account',
+    };
+  }
+
+  async verify(token: string) {
+    try {
+      await this.jwtService.verifyToken(token, 'accessToken');
+      return {
+        message: 'Verify successfully',
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === 'jwt expired') {
+          throw new BadRequestException('Token expired');
+        }
+        throw new InternalServerErrorException(error.message);
+      }
+    }
   }
 
   async login({ email, password }: LoginAuthDto, res: Response) {
@@ -102,7 +139,6 @@ export class AuthService {
     );
 
     const newAccessToken = await this.signInTokenAndCookie(jwtPayload, res);
-
     return res.status(HttpStatus.OK).json({
       accessToken: newAccessToken,
     });

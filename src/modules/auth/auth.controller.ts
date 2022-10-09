@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -42,6 +43,13 @@ export class AuthController {
   })
   register(@Body() registerAuthDto: RegisterAuthDto) {
     return this.authService.register(registerAuthDto);
+  }
+
+  @Get('verify')
+  verify(@Req() req: Request) {
+    const token = req.query.token as string;
+    if (!token) throw new BadRequestException('Token is required');
+    return this.authService.verify(token);
   }
 
   @Post('login')

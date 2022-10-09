@@ -1,25 +1,32 @@
 import {
-  ArgumentsHost,
-  Catch,
   ExceptionFilter,
+  Catch,
+  ArgumentsHost,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
-import type { Response } from 'express';
+import { HttpAdapterHost } from '@nestjs/core';
 
-@Catch(HttpException)
-export class HttpExceptionFilter<T> implements ExceptionFilter {
-  catch(exception: T, host: ArgumentsHost) {
+@Catch()
+export class AllExceptionsFilter implements ExceptionFilter {
+  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+
+  catch(exception: unknown, host: ArgumentsHost): void {
+    const { httpAdapter } = this.httpAdapterHost;
+
     const ctx = host.switchToHttp();
-    const res = ctx.getResponse<Response>();
-    const req = ctx.getRequest<Request>();
+    const response = ctx.getResponse();
 
-    const status =
-      exception instanceof HttpException ? exception.getStatus() : 500;
+    const httpStatus =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
     const exceptionRes =
       exception instanceof HttpException ? exception.getResponse() : null;
 
     const error =
-      typeof res === 'string'
+      typeof response === 'string'
         ? {
             message: exceptionRes,
           }
@@ -27,10 +34,13 @@ export class HttpExceptionFilter<T> implements ExceptionFilter {
             ...(exceptionRes as object),
           };
 
-    res.status(status).json({
+    const responseBody = {
       ...error,
+      statusCode: httpStatus,
       timestamp: new Date().toISOString(),
-      path: req.url,
-    });
+      path: httpAdapter.getRequestUrl(ctx.getRequest()),
+    };
+
+    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }
 }

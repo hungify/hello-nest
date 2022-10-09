@@ -1,8 +1,8 @@
 {
   "name": "hello-nestjs",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Nest framework TypeScript starter repository",
+  "author": "hungify",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -42,7 +43,9 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "ms": "^2.1.3",
+    "mustache": "^4.2.0",
     "nest-winston": "^1.7.0",
+    "nodemailer": "^6.8.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.8.0",
@@ -65,7 +68,9 @@
     "@types/jest": "28.1.8",
     "@types/morgan": "^1.9.3",
     "@types/ms": "^0.7.31",
+    "@types/mustache": "^4.2.1",
     "@types/node": "^16.0.0",
+    "@types/nodemailer": "^6.4.6",
     "@types/passport-local": "^1.0.34",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",

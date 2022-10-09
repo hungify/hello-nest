@@ -7,7 +7,6 @@ import { AuthModule } from '../auth/auth.module';
 import { CoffeesModule } from '../coffees/coffees.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
