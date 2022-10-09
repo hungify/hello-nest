@@ -1,12 +1,12 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { setupApiCors, setupApiDocs } from './common/configs';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { WrapResponseInterceptor } from './common/interceptors/wrap-response.interceptor';
 import { AppModule } from './modules/app/app.module';
@@ -15,13 +15,14 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     // logger: WinstonModule.createLogger(loggerConfig),
   });
+  const httpAdapter = app.get(HttpAdapterHost);
+  const configService = app.get(ConfigService);
+  // const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+
   app.setGlobalPrefix('api', {
     exclude: [],
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-
-  const configService = app.get(ConfigService);
-  // const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
 
   setupApiDocs(app);
   setupApiCors(app);
@@ -39,7 +40,7 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(
     new WrapResponseInterceptor(),
     new TimeoutInterceptor(),

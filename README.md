@@ -17,6 +17,12 @@
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
 
+## Requirements
+
+- [Node.js](https://nodejs.org/en/) >= 16.0.0
+- [TypeScript](https://www.typescriptlang.org/) >= 4.8.0
+- [PostgreSQL](https://www.postgresql.org/) >= 9.6.0
+
 ## Installation
 
 ```bash
@@ -26,7 +32,7 @@ npm install
 ## Running the app
 
 ```bash
-# development
+# development manual
 $ npm run start
 
 # watch mode
@@ -34,6 +40,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# development with docker
+$ docker-compose up
 ```
 
 ## Test
@@ -53,11 +62,13 @@ $ npm run test:cov
 
 1. http-client
 
-- Send request inside `http-client` folder, each file is a script to run all endpoint in module.
+- Send request inside `http-client` folder, each file is a script to run all
+  endpoint in module.
 
 2. Postman
 
-- Add pre-script to automatic set token before send request.
+- Add script to pre-script tab in postman will be add token to header
+  automatically before send request.
 
 ```js
 const Host = pm.environment.get('baseUrl');

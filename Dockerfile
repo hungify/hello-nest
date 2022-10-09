@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:16.0.0-alpine as dependencies
+FROM node:16.10.0-alpine as dependencies
 
 RUN mkdir -p /home/app
 

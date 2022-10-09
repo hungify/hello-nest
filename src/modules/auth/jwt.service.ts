@@ -39,14 +39,9 @@ export class JWTService {
     return options;
   }
 
-  async signInToken(payload: AuthJwtPayload, type: TokenType) {
-    try {
-      const options = this.jwtOptions(type);
-      return await this.jwtService.signAsync(payload, options);
-    } catch (error) {
-      if (error instanceof Error)
-        throw new InternalServerErrorException(error.message);
-    }
+  signInToken(payload: AuthJwtPayload, type: TokenType) {
+    const options = this.jwtOptions(type);
+    return this.jwtService.signAsync(payload, options);
   }
 
   async verifyToken(token: string, type: TokenType) {
