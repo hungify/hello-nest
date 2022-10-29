@@ -1,9 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum } from 'class-validator';
 import { BaseModel } from 'src/common/models/base.model';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' }) // SQL table name will be 'users'
 export class User extends BaseModel {
+  @PrimaryGeneratedColumn()
+  userId: number;
+
   @ApiProperty({
     example: 'example',
     description: 'The name of User',
@@ -33,4 +37,13 @@ export class User extends BaseModel {
   })
   @Column({ default: false })
   isVerified: boolean;
+
+  @ApiProperty({
+    example: 'user',
+    description: 'The role of User',
+    default: 'user',
+  })
+  @Column({ default: 'user' })
+  @IsEnum(['user', 'admin'])
+  role: string;
 }

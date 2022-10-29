@@ -20,6 +20,6 @@ import { AuthRepository } from './repositories/auth.repository';
     JwtService,
     EmailService,
   ],
-  exports: [AuthService],
+  exports: [AuthService, JWTService],
 })
 export class AuthModule {}

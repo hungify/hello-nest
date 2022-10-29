@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   HttpStatus,
   Injectable,
@@ -10,10 +9,11 @@ import { ConfigService } from '@nestjs/config';
 import type { CookieOptions, Request, Response } from 'express';
 import ms from 'ms';
 import type { SecurityConfig } from '~/common/interfaces';
+import type { User } from '../users/entities/user.entity';
 import type { LoginAuthDto } from './dto/login-auth.dto';
 import type { RegisterAuthDto } from './dto/register-auth.dto';
-import type { AuthJwtPayload } from './interfaces/auth.interface';
 import { EmailService } from './email.service';
+import type { UserPayload } from './interfaces/auth.interface';
 import { JWTService } from './jwt.service';
 import { PasswordService } from './password.service';
 import { AuthRepository } from './repositories/auth.repository';
@@ -28,26 +28,40 @@ export class AuthService {
     private readonly emailService: EmailService,
   ) {}
 
-  private async signInTokenAndCookie(payload: AuthJwtPayload, res: Response) {
+  private getUserPayloadFromUser(user: User): UserPayload {
+    return {
+      email: user.email,
+      userId: user.userId,
+      isVerified: user.isVerified,
+      role: user.role,
+    };
+  }
+
+  private async signInTokenAndSetCookie(payload: UserPayload, res: Response) {
     const nodeEnv = this.configService.get<string>('nodeEnv');
     const { refreshTokenExpiresIn } =
       this.configService.get<SecurityConfig>('security');
 
     const cookieOptions: CookieOptions = {
       httpOnly: true,
-      sameSite: true,
+      sameSite: 'lax',
       secure: nodeEnv === 'production',
       maxAge: ms(refreshTokenExpiresIn),
       path: '/',
     };
 
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signInToken(payload, 'accessToken'),
-      this.jwtService.signInToken(payload, 'refreshToken'),
-    ]);
-
-    res.cookie('refreshToken', refreshToken, cookieOptions);
-    return accessToken;
+    try {
+      const [accessToken, refreshToken] = await Promise.all([
+        this.jwtService.signInToken(payload, 'accessToken'),
+        this.jwtService.signInToken(payload, 'refreshToken'),
+      ]);
+      res.cookie('refreshToken', refreshToken, cookieOptions);
+      return accessToken;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new InternalServerErrorException(error.message);
+      }
+    }
   }
 
   async register({ email, fullName, password }: RegisterAuthDto) {
@@ -63,12 +77,9 @@ export class AuthService {
     });
 
     const baseClientUrl = this.configService.get<string>('baseClientUrl');
-    const payload = {
-      email: newUser.email,
-      id: newUser.id,
-    };
+
     const accessToken = await this.jwtService.signInToken(
-      payload,
+      newUser,
       'accessToken',
     );
 
@@ -87,19 +98,13 @@ export class AuthService {
   }
 
   async verify(token: string) {
-    try {
-      await this.jwtService.verifyToken(token, 'accessToken');
-      return {
-        message: 'Verify successfully',
-      };
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === 'jwt expired') {
-          throw new BadRequestException('Token expired');
-        }
-        throw new InternalServerErrorException(error.message);
-      }
-    }
+    const { email } = await this.jwtService.verifyToken(token, 'accessToken');
+
+    const foundUser = await this.authRepository.findOne(email);
+    foundUser.isVerified = true;
+    return {
+      message: 'Verify successfully',
+    };
   }
 
   async login({ email, password }: LoginAuthDto, res: Response) {
@@ -115,12 +120,8 @@ export class AuthService {
     if (!isPasswordValid)
       throw new UnauthorizedException("Email or password don't match");
 
-    const jwtPayload: AuthJwtPayload = {
-      email: foundUser.email,
-      id: foundUser.id,
-    };
-
-    const accessToken = await this.signInTokenAndCookie(jwtPayload, res);
+    const userPayload = this.getUserPayloadFromUser(foundUser);
+    const accessToken = await this.signInTokenAndSetCookie(userPayload, res);
 
     return res.status(HttpStatus.OK).json({
       accessToken,
@@ -133,12 +134,12 @@ export class AuthService {
       'cookie',
     );
 
-    const jwtPayload = await this.jwtService.verifyToken(
+    const userPayload = await this.jwtService.verifyToken(
       refreshToken,
       'refreshToken',
     );
 
-    const newAccessToken = await this.signInTokenAndCookie(jwtPayload, res);
+    const newAccessToken = await this.signInTokenAndSetCookie(userPayload, res);
     return res.status(HttpStatus.OK).json({
       accessToken: newAccessToken,
     });
@@ -158,26 +159,12 @@ export class AuthService {
     });
   }
 
-  async me({ email }: AuthJwtPayload) {
+  async me({ email }: UserPayload) {
     const foundUser = await this.authRepository.findOne(email);
     if (!foundUser) throw new UnauthorizedException('User not found');
 
     foundUser.password = undefined;
-    foundUser.id = undefined;
+    foundUser.userId = undefined;
     return foundUser;
-  }
-
-  async getUserByEmail(email: string) {
-    try {
-      const foundUser = await this.authRepository.findOne(email);
-      if (!foundUser) throw new BadRequestException('User not found');
-      return foundUser;
-    } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw new BadRequestException(error.message);
-      } else if (error instanceof Error) {
-        throw new InternalServerErrorException(error.message);
-      }
-    }
   }
 }

@@ -1,8 +1,8 @@
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
-import { useContainer } from 'class-validator';
+import { useContainer, ValidationError } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { setupApiCors, setupApiDocs } from './common/configs';
@@ -37,6 +37,9 @@ async function bootstrap() {
       transform: true,
       transformOptions: {
         enableImplicitConversion: true,
+      },
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        return new BadRequestException(validationErrors);
       },
     }),
   );

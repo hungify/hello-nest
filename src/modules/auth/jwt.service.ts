@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import type { Request } from 'express';
 import type { SecurityConfig } from '~/common/interfaces';
-import type { AuthJwtPayload, TokenType } from './interfaces/auth.interface';
+import type { TokenType, UserPayload } from './interfaces/auth.interface';
 
 @Injectable()
 export class JWTService {
@@ -39,7 +39,7 @@ export class JWTService {
     return options;
   }
 
-  signInToken(payload: AuthJwtPayload, type: TokenType) {
+  signInToken(payload: UserPayload, type: TokenType) {
     const options = this.jwtOptions(type);
     return this.jwtService.signAsync(payload, options);
   }
@@ -47,14 +47,12 @@ export class JWTService {
   async verifyToken(token: string, type: TokenType) {
     try {
       const options = this.jwtOptions(type);
-      const payload = await this.jwtService.verifyAsync<AuthJwtPayload>(
+      const payload = await this.jwtService.verifyAsync<UserPayload>(
         token,
         options,
       );
-      return {
-        id: payload.id,
-        email: payload.email,
-      };
+
+      return payload;
     } catch (error) {
       if (error instanceof Error) {
         if (error.name === 'TokenExpiredError')

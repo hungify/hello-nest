@@ -25,6 +25,7 @@
     "incremental": true,
     "importsNotUsedAsValues": "error",
     "moduleResolution": "Node",
+    "typeRoots": ["src/@types", "./node_modules/@types"],
     "paths": {
       "~auth/*": ["src/modules/auth/*"],
       "~user/*": ["src/modules/user/*"],

@@ -1,10 +1,8 @@
 # Variables
 @baseUrl=http://localhost:8000/api
-@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpZCI6MSwiaWF0IjoxNjY0NTQzMDc4LCJleHAiOjE2NjQ1NDY2Nzh9.-VyOmQsWx3EGGt1uTxTzHzwy8Zsm55p8WikD2Kopd9M
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpZCI6MSwiaWF0IjoxNjY3MTA5NzYwLCJleHAiOjE2NjcxMTMzNjB9.4V0MOfdfpG5izmLb_320GoayebTkrPt66KIGwZUrhG
 @refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpZCI6MSwiaWF0IjoxNjY0NTQzMDc4LCJleHAiOjE2NjQ3MTU4Nzh9._5wYxR-sNgAyOtRFth3sgAcRyGRJk75OQ8jPrWQPWRE
 @verifyToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwiaWQiOjEsImlhdCI6MTY2NTMyMDc1MywiZXhwIjoxNjY1MzI0MzUzfQ.yx20eGp8BMa57mu1cVAKC61wCMgvVksNR73FKlhx41E
-
-### Auth ###
 
 # @name Register
 POST {{baseUrl}}/auth/register  HTTP/1.1
@@ -12,12 +10,13 @@ Content-Type: application/json
 
 {
 		"fullName": "Example",
-		"email": "nmhung.dev@gmail.com",
+		"email": "nmhungify@gmail.com",
 		"password": "example"
 }
 
 ###
 
+# @name Verify
 GET {{baseUrl}}/auth/verify?token={{verifyToken}} HTTP/1.1
 Content-Type: application/json
 
@@ -29,8 +28,8 @@ POST {{baseUrl}}/auth/login  HTTP/1.1
 Content-Type: application/json
 
 {
-		"email": "example@example.com",
-		"password": "examplee"
+		"email": "nmhungify@gmail.com",
+		"password": "example"
 }
 
 ###

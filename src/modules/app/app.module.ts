@@ -1,10 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import appConfig from 'src/common/configs';
-import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
-import { DatabaseModule } from 'src/database/database.module';
+import appConfig from '~/common/configs';
+import { LoggerMiddleware } from '~/common/middlewares';
+import { DatabaseModule } from '~/database/database.module';
 import { AuthModule } from '../auth/auth.module';
-import { CoffeesModule } from '../coffees/coffees.module';
+import { PostsModule } from '../posts/posts.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 @Module({
@@ -15,8 +15,8 @@ import { AppService } from './app.service';
     }),
     DatabaseModule,
     // WinstonModule.forRoot(loggerConfig),
-    CoffeesModule,
     AuthModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

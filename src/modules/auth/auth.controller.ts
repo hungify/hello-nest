@@ -12,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -23,8 +24,8 @@ import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { JwtGuard } from './guards/jwt.guard';
-import type { AuthJwtPayload } from './interfaces/auth.interface';
-import { JwtPayloadResponse, UserResponse } from './models/auth';
+import type { UserPayload } from './interfaces/auth.interface';
+import { JwtPayloadResponse, UserResponse } from './models/auth.model';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -46,6 +47,9 @@ export class AuthController {
   }
 
   @Get('verify')
+  @ApiQuery({
+    name: 'token',
+  })
   verify(@Req() req: Request) {
     const token = req.query.token as string;
     if (!token) throw new BadRequestException('Token is required');
@@ -89,7 +93,7 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiBearerAuth('defaultBearerAuth')
-  me(@GetUser() jwtPayload: AuthJwtPayload) {
+  me(@GetUser() jwtPayload: UserPayload) {
     return this.authService.me(jwtPayload);
   }
 }
