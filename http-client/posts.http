@@ -1,0 +1,30 @@
+# Variables
+@baseUrl=http://localhost:8000/api
+@resouceName=posts
+
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZ2lmeUBnbWFpbC5jb20iLCJ1c2VySWQiOjEsImlzVmVyaWZpZWQiOmZhbHNlLCJyb2xlIjoidXNlciIsImlhdCI6MTY2NzEyMDU3NCwiZXhwIjoxNjY3MTI0MTc0fQ.vLNzwS5JkpyXWZCqyuJj2W_vAq17Rp8_q_tdt5kvKXE
+
+# @name Get all users
+GET {{baseUrl}}/{{resouceName}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+# @name Get user by id
+GET {{baseUrl}}/{{resouceName}}/123 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+
+# @name Create user
+POST {{baseUrl}}/{{resouceName}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+		"email": "nmhung.dev@gmail.com"
+}
+
+###
