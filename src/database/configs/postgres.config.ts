@@ -6,21 +6,33 @@ interface ConnectionOptions extends PostgresConnectionOptions {
   keepConnectionAlive: boolean;
 }
 
-export default registerAs(
-  'postgres',
-  (): ConnectionOptions => ({
-    host: process.env.POSTGRES_HOST,
-    port: parseInt(process.env.POSTGRES_PORT, 10),
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
-    synchronize: process.env.NODE_ENV !== 'production',
-    logging: process.env.NODE_ENV !== 'production',
-    entities: [path.join(__dirname, '../../**/entities/*.entity.{js,ts}')],
+export default registerAs('postgres', (): ConnectionOptions => {
+  const nodeEnv = process.env.NODE_ENV;
+  const isProduction = nodeEnv === 'production';
+
+  const host = process.env.POSTGRES_HOST;
+  const port = Number(process.env.POSTGRES_PORT);
+  const username = process.env.POSTGRES_USER;
+  const password = process.env.POSTGRES_PASSWORD;
+  const database = process.env.POSTGRES_DB;
+  const entities = [path.join(__dirname, '../**/*.entity{.ts,.js}')];
+  const migrations = [path.join(__dirname, '../migrations/*{.ts,.js}')];
+  const url = `postgres://${username}:${password}@${host}:${port}/${database}`;
+  const ssl =
+    host === 'localhost' && !isProduction
+      ? false
+      : { rejectUnauthorized: false };
+
+  return {
+    synchronize: !isProduction,
+    logging: !isProduction,
+    entities,
     keepConnectionAlive: true,
-    migrations: ['dist/database/migrations/*{.ts,.js}'],
+    migrations,
     migrationsRun: true,
     migrationsTableName: 'migrations',
     type: 'postgres',
-  }),
-);
+    ssl,
+    url,
+  };
+});

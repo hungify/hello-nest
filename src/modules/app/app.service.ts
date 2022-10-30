@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import type { HttpConfig } from '~/common/interfaces';
+import type { Request } from 'express';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly configService: ConfigService) {}
-  welcome(): unknown {
-    const { host, port } = this.configService.get<HttpConfig>('http');
+  welcome(req: Request): unknown {
     return {
       title: 'Welcome to NestJS API Stater',
       content: 'Redirect to /docs for API documentation',
-      link: `http://${host}:${port}/api/docs`,
+      link: `${req.protocol}://${req.get('Host')}${req.originalUrl}api/docs`,
     };
   }
 }

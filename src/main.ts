@@ -1,4 +1,8 @@
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  RequestMethod,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
@@ -6,9 +10,11 @@ import { useContainer, ValidationError } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { setupApiCors, setupApiDocs } from './common/configs';
-import { AllExceptionsFilter } from './common/filters/http-exception.filter';
-import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
-import { WrapResponseInterceptor } from './common/interceptors/wrap-response.interceptor';
+import { AllExceptionsFilter } from './common/filters';
+import {
+  TimeoutInterceptor,
+  WrapResponseInterceptor,
+} from './common/interceptors';
 import { AppModule } from './modules/app/app.module';
 
 async function bootstrap() {
@@ -20,7 +26,7 @@ async function bootstrap() {
   // const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
 
   app.setGlobalPrefix('api', {
-    exclude: [],
+    exclude: [{ path: '/', method: RequestMethod.ALL }],
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
@@ -50,10 +56,9 @@ async function bootstrap() {
   );
 
   await app.listen(configService.get('PORT')).then(() => {
-    console.info(`=================================`);
-    console.info(`🚀 App listening on the port ${configService.get('PORT')}`);
-    console.info(`🎮 Url: http://localhost:${configService.get('PORT')}`);
-    console.info(`=================================`);
+    console.log(`====================================`);
+    console.log(`🚀 Server listening on the port ${configService.get('PORT')}`);
+    console.log(`====================================`);
   });
 }
 

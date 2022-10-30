@@ -6,15 +6,14 @@ import type { HttpConfig, SwaggerConfig } from '../interfaces/config.interface';
 export const setupApiDocs = (app: INestApplication) => {
   const configService = app.get(ConfigService);
   const swaggerConfig = configService.get<SwaggerConfig>('swagger');
-  const { host, port } = configService.get<HttpConfig>('http');
-  const httpServer = `http://${host}:${port}/api`;
+  const { host } = configService.get<HttpConfig>('http');
 
   if (swaggerConfig.isEnabled) {
     const options = new DocumentBuilder()
       .setTitle(swaggerConfig.title)
       .setDescription(swaggerConfig.description)
       .setVersion(swaggerConfig.version)
-      .addServer(httpServer)
+      .addServer(host)
       .addSecurity('defaultBearerAuth', {
         description: `Please enter token in following format: Bearer <JWT>`,
         name: 'Authorization',
