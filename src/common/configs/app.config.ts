@@ -24,7 +24,7 @@ export default (): AppConfig => ({
     description: process.env.SWAGGER_DESCRIPTION,
     version: process.env.SWAGGER_VERSION,
     tag: process.env.SWAGGER_TAG,
-    isEnabled: process.env.NODE_ENV === 'development',
+    isEnabled: process.env.SWAGGER_ENABLED === 'true',
     path: process.env.SWAGGER_PATH,
   },
   logger: {
