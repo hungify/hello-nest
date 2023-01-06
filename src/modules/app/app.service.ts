@@ -3,7 +3,7 @@ import type { Request } from 'express';
 
 @Injectable()
 export class AppService {
-  welcome(req: Request): unknown {
+  welcome(req: Request): Record<string, string> {
     return {
       title: 'Welcome to NestJS API Stater',
       content: 'Redirect to /api/docs for API documentation',

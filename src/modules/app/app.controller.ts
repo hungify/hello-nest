@@ -9,7 +9,7 @@ export class AppController {
 
   @Get()
   @ApiExcludeEndpoint()
-  welcome(@Req() req: Request): unknown {
+  welcome(@Req() req: Request): Record<string, string> {
     return this.appService.welcome(req);
   }
 }

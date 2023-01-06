@@ -7,9 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { useContainer, ValidationError } from 'class-validator';
-import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
 import { setupApiCors, setupApiDocs } from './common/configs';
+import { setupApiMiddlewares } from './common/configs/middleware.config';
 import { AllExceptionsFilter } from './common/filters';
 import {
   TimeoutInterceptor,
@@ -32,9 +31,7 @@ async function bootstrap() {
 
   setupApiDocs(app);
   setupApiCors(app);
-
-  app.use(morgan('dev'));
-  app.use(cookieParser());
+  setupApiMiddlewares(app);
 
   app.useGlobalPipes(
     new ValidationPipe({
