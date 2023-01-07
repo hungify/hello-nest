@@ -91,6 +91,13 @@ pm.sendRequest(postRequest, (error, response) => {
 });
 ```
 
+3. Postgres
+
+- Connect Postgres with PgAdmin GUI
+- Get the identifier of your Postgres container: `docker ps`
+- Print the IP address of this docker image using its identifier:
+  `Docker inspect Container ID | grep IPAddress`
+
 ## License
 
 Nest is [MIT licensed](LICENSE).
