@@ -8,13 +8,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { AccessTokenGuard } from '~auth/guards';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CheckPolicies } from '~/common/decorators/policy.decorator';
+import { PoliciesGuard } from '~/common/guards/policies.guard';
+import type { CreatePostDto, UpdatePostDto } from './dto';
+import { ReadPostPolicyHandler } from './policies';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
-@UseGuards(AccessTokenGuard)
+@UseGuards(PoliciesGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
@@ -24,6 +25,7 @@ export class PostsController {
   }
 
   @Get()
+  @CheckPolicies(new ReadPostPolicyHandler())
   findAll() {
     return this.postsService.findAll();
   }

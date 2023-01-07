@@ -7,14 +7,14 @@ import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { useContainer, ValidationError } from 'class-validator';
+import { AppModule } from './app/app.module';
 import { setupApiCors, setupApiDocs } from './common/configs';
-import { setupApiMiddlewares } from './common/configs/middleware.config';
+import { setupApiExternalMiddlewares } from './common/configs/middleware.config';
 import { AllExceptionsFilter } from './common/filters';
 import {
+  FormatResponseInterceptor,
   TimeoutInterceptor,
-  WrapResponseInterceptor,
 } from './common/interceptors';
-import { AppModule } from './modules/app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -31,7 +31,7 @@ async function bootstrap() {
 
   setupApiDocs(app);
   setupApiCors(app);
-  setupApiMiddlewares(app);
+  setupApiExternalMiddlewares(app);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -48,7 +48,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(
-    new WrapResponseInterceptor(),
+    new FormatResponseInterceptor(),
     new TimeoutInterceptor(),
   );
 

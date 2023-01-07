@@ -2,7 +2,7 @@
 @baseUrl=http://localhost:8000/api
 @resouceName=posts
 
-@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZ2lmeUBnbWFpbC5jb20iLCJ1c2VySWQiOjEsImlzVmVyaWZpZWQiOmZhbHNlLCJyb2xlIjoidXNlciIsImlhdCI6MTY2NzEyMDU3NCwiZXhwIjoxNjY3MTI0MTc0fQ.vLNzwS5JkpyXWZCqyuJj2W_vAq17Rp8_q_tdt5kvKXE
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwidXNlcklkIjoxLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzMxODkwNzksImV4cCI6MTY3MzE5MjY3OX0.2fCMfTeyzZPzrpRMy6zRpf3K1uPZYRTPQnROYaIg0U4
 
 # @name Get all users
 GET {{baseUrl}}/{{resouceName}} HTTP/1.1

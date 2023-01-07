@@ -1,10 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from '~/common/configs';
-import { LoggerMiddleware } from '~/common/middlewares';
+import { FormatResponseMiddleware } from '~/common/middlewares';
 import { DatabaseModule } from '~/database/database.module';
-import { AuthModule } from '../auth/auth.module';
-import { PostsModule } from '../posts/posts.module';
+import { AbilitiesModule } from '~/modules/abilities/abilities.module';
+import { PostsModule } from '~/modules/posts/posts.module';
+import { AuthModule } from '~auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 @Module({
@@ -13,8 +14,9 @@ import { AppService } from './app.service';
       isGlobal: true,
       load: [appConfig],
     }),
-    DatabaseModule,
     // WinstonModule.forRoot(loggerConfig),
+    DatabaseModule,
+    AbilitiesModule,
     AuthModule,
     PostsModule,
   ],
@@ -22,7 +24,7 @@ import { AppService } from './app.service';
   providers: [AppService],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(FormatResponseMiddleware).forRoutes('*');
   }
 }

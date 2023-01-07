@@ -1,2 +1,2 @@
 export * from './timeout.interceptor';
-export * from './wrap-response.interceptor';
+export * from './format-response.interceptor';

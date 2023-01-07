@@ -12,7 +12,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
-    console.log('🚀 :: AllExceptionsFilter :: exception', exception);
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
@@ -37,7 +36,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const responseBody = {
       ...error,
-      statusCode: httpStatus,
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
     };

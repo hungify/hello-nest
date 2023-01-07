@@ -1,13 +1,14 @@
 import { ForbiddenError } from '@casl/ability';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Action } from '~/common/enums/action.enum';
+import { AccessTokenGuard } from '~auth/guards';
 import { AbilityFactory } from '../abilities/ability.factory';
-import { CheckAbility } from '../abilities/decorators/abilities.decorator';
 import type { CreateUserDto } from './dto/createUser.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
+@UseGuards(AccessTokenGuard)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -26,7 +27,6 @@ export class UsersController {
   }
 
   @Get()
-  @CheckAbility({ action: Action.READ, subject: User })
   async findAll() {
     const users = await User.find();
     return users;
