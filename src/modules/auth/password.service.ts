@@ -17,6 +17,8 @@ export class PasswordService {
   }
 
   hash(password: string) {
-    return argon2.hash(password, { salt: Buffer.alloc(this.saltRounds) });
+    return argon2.hash(password, {
+      salt: Buffer.alloc(this.saltRounds),
+    });
   }
 }

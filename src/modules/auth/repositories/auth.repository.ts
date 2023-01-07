@@ -11,12 +11,12 @@ export class AuthRepository {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  create(registerAuthDto: RegisterAuthDto): Promise<User> {
+  create(registerAuthDto: RegisterAuthDto) {
     const user = this.usersRepository.create(registerAuthDto);
     return this.usersRepository.save(user);
   }
 
-  findOne(email: string): Promise<User> {
+  findOne(email: string) {
     return this.usersRepository.findOne({ where: { email } });
   }
 }

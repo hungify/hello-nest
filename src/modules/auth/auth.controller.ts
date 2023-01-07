@@ -23,7 +23,7 @@ import { GetUser } from '~/common/decorators/user.decorator';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
-import { JwtGuard } from './guards/jwt.guard';
+import { AccessTokenGuard, RefreshTokenGuard } from './guards';
 import type { UserPayload } from './interfaces/auth.interface';
 import { JwtPayloadResponse, UserResponse } from './models/auth.model';
 
@@ -68,25 +68,28 @@ export class AuthController {
   }
 
   @Get('refresh-token')
+  @UseGuards(RefreshTokenGuard)
   @ApiResponse({
     status: 200,
     description: 'The user has been refresh token successfully',
   })
   refreshToken(@Req() req: Request, @Res() res: Response) {
-    return this.authService.refreshToken(req, res);
+    const { user } = req;
+    return this.authService.refreshToken(user, res);
   }
 
   @Delete('logout')
+  @UseGuards(RefreshTokenGuard)
   @ApiResponse({
     status: 200,
     description: 'The user has been logout successfully',
   })
-  logout(@Req() req: Request, @Res() res: Response) {
-    return this.authService.logout(req, res);
+  logout(@Res() res: Response) {
+    return this.authService.logout(res);
   }
 
   @Get('me')
-  @UseGuards(JwtGuard)
+  @UseGuards(AccessTokenGuard)
   @ApiResponse({
     status: 200,
     description: 'The user has been get successfully',

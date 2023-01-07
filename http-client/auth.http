@@ -1,8 +1,8 @@
 # Variables
 @baseUrl=http://localhost:8000/api
-@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpZCI6MSwiaWF0IjoxNjY3MTA5NzYwLCJleHAiOjE2NjcxMTMzNjB9.4V0MOfdfpG5izmLb_320GoayebTkrPt66KIGwZUrhG
-@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV4YW1wbGVAZXhhbXBsZS5jb20iLCJpZCI6MSwiaWF0IjoxNjY0NTQzMDc4LCJleHAiOjE2NjQ3MTU4Nzh9._5wYxR-sNgAyOtRFth3sgAcRyGRJk75OQ8jPrWQPWRE
-@verifyToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwiaWQiOjEsImlhdCI6MTY2NTMyMDc1MywiZXhwIjoxNjY1MzI0MzUzfQ.yx20eGp8BMa57mu1cVAKC61wCMgvVksNR73FKlhx41E
+@accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwidXNlcklkIjoxLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzMwNzE2OTMsImV4cCI6MTY3MzA3NTI5M30.yyqOGcnA8P_MtAj1BmBKlv2JjjpoBg4aUG8geWAdmGs
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwidXNlcklkIjoxLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzMwNzM2MDQsImV4cCI6MTY3MzI0NjQwNH0.6VZpDNBITH6Nq6alYAOqfUI0iSzQbc6j6DOL8WoVNKA
+@verifyToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsTmFtZSI6IkV4YW1wbGUiLCJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwiY3JlYXRlZEJ5IjpudWxsLCJjcmVhdGVkQXQiOiIyMDIzLTAxLTA2VDIzOjA3OjIwLjc4N1oiLCJ1cGRhdGVkQXQiOiIyMDIzLTAxLTA2VDIzOjA3OjIwLjc4N1oiLCJ1c2VySWQiOjEsImlzVmVyaWZpZWQiOmZhbHNlLCJyb2xlIjoidXNlciIsImlhdCI6MTY3MzA3MTY0MCwiZXhwIjoxNjczMDc1MjQwfQ.P1eMwa_DY7ijOUjGEBLGlABQbc21kH4IGccXGCDgVJo
 
 # @name Register
 POST {{baseUrl}}/auth/register  HTTP/1.1
@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
 		"fullName": "Example",
-		"email": "nmhungify@gmail.com",
+		"email": "nmhung.dev@gmail.com",
 		"password": "example"
 }
 
@@ -28,7 +28,7 @@ POST {{baseUrl}}/auth/login  HTTP/1.1
 Content-Type: application/json
 
 {
-		"email": "nmhungify@gmail.com",
+		"email": "nmhung.dev@gmail.com",
 		"password": "example"
 }
 
@@ -42,7 +42,7 @@ Cookie: refreshToken={{refreshToken}}
 ###
 
 # @name Logout
-GET {{baseUrl}}/auth/logout HTTP/1.1
+DELETE  {{baseUrl}}/auth/logout HTTP/1.1
 Content-Type: application/json
 Cookie: refreshToken={{refreshToken}}
 
