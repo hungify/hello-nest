@@ -1,7 +1,10 @@
-import type { UserPayload } from '~auth/interfaces/auth.interface';
+import type { UserPayload } from '~/auth/interfaces/auth.interface';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: UserPayload;
+declare global {
+  namespace Express {
+    // interface Request {
+    //   user?: Express.User;
+    // }
+    interface User extends UserPayload {}
   }
 }

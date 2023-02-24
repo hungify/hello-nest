@@ -5,7 +5,7 @@ import { FormatResponseMiddleware } from '~/common/middlewares';
 import { DatabaseModule } from '~/database/database.module';
 import { AbilitiesModule } from '~/modules/abilities/abilities.module';
 import { PostsModule } from '~/modules/posts/posts.module';
-import { AuthModule } from '~auth/auth.module';
+import { AuthModule } from '~/auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 @Module({

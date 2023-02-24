@@ -20,12 +20,13 @@ import {
 } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { GetUser } from '~/common/decorators/user.decorator';
+import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AccessTokenGuard, RefreshTokenGuard } from './guards';
 import type { UserPayload } from './interfaces/auth.interface';
-import { JwtPayloadResponse, UserResponse } from './models/auth.model';
+import { Auth } from './models/auth.model';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -37,7 +38,7 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created.',
-    type: UserResponse,
+    type: User,
     schema: {
       $ref: getSchemaPath(RegisterAuthDto),
     },
@@ -61,7 +62,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'The user has been login successfully',
-    type: JwtPayloadResponse,
+    type: Auth,
   })
   login(@Body() loginAuthDto: LoginAuthDto, @Res() res: Response) {
     return this.authService.login(loginAuthDto, res);
@@ -72,6 +73,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'The user has been refresh token successfully',
+    type: Auth,
   })
   refreshToken(@Req() req: Request, @Res() res: Response) {
     const { user } = req;

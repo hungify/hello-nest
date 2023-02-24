@@ -9,7 +9,7 @@ import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import type { CookieOptions, Response } from 'express';
 import ms from 'ms';
 import type { SecurityConfig } from '~/common/interfaces';
-import type { TokenType, UserPayload } from '~auth/interfaces/auth.interface';
+import type { TokenType, UserPayload } from '~/auth/interfaces/auth.interface';
 import type { User } from '../../users/entities/user.entity';
 
 @Injectable()

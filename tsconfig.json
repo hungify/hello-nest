@@ -25,11 +25,11 @@
     "incremental": true,
     "importsNotUsedAsValues": "error",
     "moduleResolution": "Node",
-    "typeRoots": ["src/@types", "./node_modules/@types"],
+    "typeRoots": ["src/@types"],
     "paths": {
-      "~auth/*": ["src/modules/auth/*"],
-      "~user/*": ["src/modules/user/*"],
-      "~coffees/*": ["src/modules/coffees/*"],
+      "~/auth/*": ["src/modules/auth/*"],
+      "~/user/*": ["src/modules/user/*"],
+      "~/coffees/*": ["src/modules/coffees/*"],
       "~/*": ["src/*"]
     }
   }

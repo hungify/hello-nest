@@ -1,7 +1,7 @@
 import { ForbiddenError } from '@casl/ability';
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Action } from '~/common/enums/action.enum';
-import { AccessTokenGuard } from '~auth/guards';
+import { AccessTokenGuard } from '~/auth/guards';
 import { AbilityFactory } from '../abilities/ability.factory';
 import type { CreateUserDto } from './dto/createUser.dto';
 import { User } from './entities/user.entity';

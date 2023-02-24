@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Action } from '~/common/enums/action.enum';
 import { Role } from '~/common/enums/role.enum';
 import { User } from '~/modules/users/entities/user.entity';
-import type { UserPayload } from '~auth/interfaces/auth.interface';
+import type { UserPayload } from '~/auth/interfaces/auth.interface';
 import type { AppAbility, Subjects } from './abilities.interface';
 
 @Injectable()
