@@ -21,7 +21,7 @@ export class FormatResponseInterceptor<T>
       map((data) => ({
         statusCode: context.switchToHttp().getResponse<Response>().statusCode,
         message: data.message || '',
-        data: data,
+        ...data,
       })),
     );
   }

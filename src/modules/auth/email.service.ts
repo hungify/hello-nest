@@ -11,7 +11,7 @@ import type { SendEmailDto } from './dto/send-email.dto';
 export class EmailService {
   constructor(private readonly configService: ConfigService) {}
 
-  async sendEmail({ verifyUrl, email, subject, type }: SendEmailDto) {
+  sendEmail({ verifyUrl, email, subject, type }: SendEmailDto) {
     try {
       let templatePath = '';
       let html = '';
@@ -41,7 +41,7 @@ export class EmailService {
         html: mustache.render(html, { link: verifyUrl }),
       };
 
-      await transporter.sendMail(info);
+      return transporter.sendMail(info);
     } catch (error) {
       if (error instanceof Error) {
         throw new InternalServerErrorException(error.message);

@@ -24,36 +24,60 @@ export class AuthService {
     private readonly emailService: EmailService,
   ) {}
 
-  async register({ email, fullName, password }: RegisterAuthDto) {
-    const isUserExist = await this.authRepository.findOne(email);
-    if (isUserExist) throw new ConflictException('User already exists');
-
-    const passwordHashed = await this.passwordService.hash(password);
-    Object.assign({ password: passwordHashed });
-
-    const newUser = await this.authRepository.create({
-      email,
-      fullName,
-      password: passwordHashed,
-    });
-
-    newUser.password = undefined;
-
+  async sendVerifyEmail(email: string, token: string) {
     const baseClientUrl = this.configService.get<string>('baseClientUrl');
 
-    const accessToken = await this.authHelper.signInToken(
-      { ...newUser },
-      'accessToken',
-    );
+    const verifyUrl = `${baseClientUrl}/auth/verify?token=${token}&email=${email}`;
 
-    const verifyUrl = `${baseClientUrl}/auth/verify?token=${accessToken}`;
-
-    await this.emailService.sendEmail({
+    return this.emailService.sendEmail({
       verifyUrl,
       email,
       subject: 'Verify your email',
       type: 'register',
     });
+  }
+
+  async register({ email }): Promise<{ message: string }>;
+  async register({ email, fullName, password }: RegisterAuthDto) {
+    let accessToken = '';
+
+    // If have email only, resend email verify
+    if ((!fullName || !password) && email) {
+      const foundUser = await this.authRepository.findOne(email);
+      if (!foundUser) throw new UnauthorizedException('User not found');
+      accessToken = await this.authHelper.signInToken(
+        {
+          email: foundUser.email,
+          userId: foundUser.userId,
+          isVerified: foundUser.isVerified,
+          role: foundUser.role,
+        },
+        'accessToken',
+      );
+    } else {
+      const isUserExist = await this.authRepository.findOne(email);
+      if (isUserExist) throw new ConflictException('User already exists');
+
+      const passwordHashed = await this.passwordService.hash(password);
+      Object.assign({ password: passwordHashed });
+
+      const newUser = await this.authRepository.create({
+        email,
+        fullName,
+        password: passwordHashed,
+      });
+
+      newUser.password = undefined;
+
+      accessToken = await this.authHelper.signInToken(
+        { ...newUser },
+        'accessToken',
+      );
+    }
+
+    const info = await this.sendVerifyEmail(email, accessToken);
+
+    if (!info) throw new UnauthorizedException('Send email failed');
 
     return {
       message: 'Please check your email to verify your account',
@@ -71,7 +95,10 @@ export class AuthService {
   }
 
   async login({ email, password }: LoginAuthDto, res: Response) {
-    const foundUser = await this.authRepository.findOne(email);
+    const foundUser = await this.authRepository.findOne(email, {
+      isVerified: true,
+    });
+
     if (!foundUser)
       throw new UnauthorizedException("Email or password don't match");
 

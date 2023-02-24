@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { User } from '~/modules/users/entities/user.entity';
 import type { RegisterAuthDto } from '../dto';
 
@@ -16,7 +16,7 @@ export class AuthRepository {
     return this.usersRepository.save(user);
   }
 
-  findOne(email: string) {
-    return this.usersRepository.findOne({ where: { email } });
+  findOne(email: string, conditions?: FindOptionsWhere<User>) {
+    return this.usersRepository.findOne({ where: { email, ...conditions } });
   }
 }

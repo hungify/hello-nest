@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -47,13 +46,26 @@ export class AuthController {
     return this.authService.register(registerAuthDto);
   }
 
+  @Post('resend-email')
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully created.',
+    type: User,
+    schema: {
+      $ref: getSchemaPath(RegisterAuthDto),
+    },
+  })
+  resendEmail(@Req() req: Request) {
+    const email = req.query.email as string;
+    return this.authService.register({ email });
+  }
+
   @Get('verify')
   @ApiQuery({
     name: 'token',
   })
   verify(@Req() req: Request) {
     const token = req.query.token as string;
-    if (!token) throw new BadRequestException('Token is required');
     return this.authService.verify(token);
   }
 

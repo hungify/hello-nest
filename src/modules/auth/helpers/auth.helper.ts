@@ -77,7 +77,7 @@ export class AuthHelper {
     return options;
   }
 
-  signInToken(payload: UserPayload, type: TokenType) {
+  signInToken(payload: UserPayload | string, type: TokenType) {
     const options = this.jwtOptions(type);
     return this.jwtService.signAsync(payload, options);
   }
