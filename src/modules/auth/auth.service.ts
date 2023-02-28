@@ -1,6 +1,5 @@
 import {
   ConflictException,
-  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -9,8 +8,8 @@ import type { Response } from 'express';
 import type { LoginAuthDto } from './dto/login-auth.dto';
 import type { RegisterAuthDto } from './dto/register-auth.dto';
 import { EmailService } from './email.service';
-import type { UserPayload } from './interfaces/auth.interface';
 import { AuthHelper } from './helpers/auth.helper';
+import type { UserPayload } from './interfaces/auth.interface';
 import { PasswordService } from './password.service';
 import { AuthRepository } from './repositories/auth.repository';
 
@@ -89,6 +88,8 @@ export class AuthService {
 
     const foundUser = await this.authRepository.findOne(email);
     foundUser.isVerified = true;
+    await foundUser.save();
+
     return {
       message: 'Verify successfully',
     };
@@ -116,26 +117,22 @@ export class AuthService {
       res,
     );
 
-    return res.status(HttpStatus.OK).json({
-      accessToken,
-    });
+    return accessToken;
   }
 
   async refreshToken(userPayload: UserPayload, res: Response) {
-    const newAccessToken = await this.authHelper.signInTokenAndSetCookie(
+    const newAccessToken = this.authHelper.signInTokenAndSetCookie(
       userPayload,
       res,
     );
-    return res.status(HttpStatus.OK).json({
-      accessToken: newAccessToken,
-    });
+    return newAccessToken;
   }
 
-  async logout(res: Response) {
+  logout(res: Response) {
     res.clearCookie('refreshToken');
-    return res.status(HttpStatus.OK).json({
+    return {
       message: 'Logout successfully',
-    });
+    };
   }
 
   async me({ email }: UserPayload) {

@@ -11,10 +11,7 @@ import { AppModule } from './app/app.module';
 import { setupApiCors, setupApiDocs } from './common/configs';
 import { setupApiExternalMiddlewares } from './common/configs/middleware.config';
 import { AllExceptionsFilter } from './common/filters';
-import {
-  FormatResponseInterceptor,
-  TimeoutInterceptor,
-} from './common/interceptors';
+import { TimeoutInterceptor } from './common/interceptors';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -47,10 +44,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-  app.useGlobalInterceptors(
-    new FormatResponseInterceptor(),
-    new TimeoutInterceptor(),
-  );
+  app.useGlobalInterceptors(new TimeoutInterceptor());
 
   await app.listen(configService.get('PORT')).then(() => {
     console.log(`====================================`);

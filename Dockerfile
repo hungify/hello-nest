@@ -1,29 +1,55 @@
-# Install dependencies only when needed
-FROM node:16.10.0-alpine as dependencies
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
 
-RUN mkdir -p /home/app
+FROM node:18 As development
 
-WORKDIR /home/app
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
-RUN chown -R node:node /home/app
+WORKDIR /usr/src/app
 
-USER node
+COPY --chown=node:node pnpm-lock.yaml ./
 
-COPY --chown=node:node package.json yarn.lock ./
-
-RUN yarn install --prod=false --silent --frozen-lockfile
-
-# Rebuild the source code only when needed
-FROM node:16.0.0-alpine as builder
-
-WORKDIR /home/app
-
-ENV NODE_ENV development
+RUN pnpm fetch --prod
 
 COPY --chown=node:node . .
 
-COPY --from=dependencies /home/app/node_modules ./node_modules
+RUN pnpm install
 
-EXPOSE 8000
+USER node
 
-CMD [ "yarn", "start:dev"]
+###################
+# BUILD FOR PRODUCTION
+###################
+
+FROM node:18 As build
+
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node pnpm-lock.yaml ./
+
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+RUN pnpm build
+
+ENV NODE_ENV production
+
+RUN pnpm install --prod
+
+USER node
+
+###################
+# PRODUCTION
+###################
+
+FROM node:18-alpine As production
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+CMD [ "node", "dist/main.js" ]

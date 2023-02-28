@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Post,
   Req,
   Res,
@@ -17,10 +18,16 @@ import {
   ApiUnauthorizedResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 import { GetUser } from '~/common/decorators/user.decorator';
+import type {
+  BaseResponse,
+  MessageResponse,
+  JsonResponse,
+} from '~/common/dto/base-response.dto';
 import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
+import type { AuthTokenResponse } from './dto/auth-response.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AccessTokenGuard, RefreshTokenGuard } from './guards';
@@ -42,8 +49,14 @@ export class AuthController {
       $ref: getSchemaPath(RegisterAuthDto),
     },
   })
-  register(@Body() registerAuthDto: RegisterAuthDto) {
-    return this.authService.register(registerAuthDto);
+  async register(
+    @Body() registerAuthDto: RegisterAuthDto,
+  ): Promise<BaseResponse<MessageResponse>> {
+    const message = await this.authService.register(registerAuthDto);
+
+    return {
+      data: message,
+    };
   }
 
   @Post('resend-email')
@@ -55,18 +68,26 @@ export class AuthController {
       $ref: getSchemaPath(RegisterAuthDto),
     },
   })
-  resendEmail(@Req() req: Request) {
+  async resendEmail(
+    @Req() req: Request,
+  ): Promise<BaseResponse<MessageResponse>> {
     const email = req.query.email as string;
-    return this.authService.register({ email });
+    const message = await this.authService.register({ email });
+    return {
+      data: message,
+    };
   }
 
   @Get('verify')
   @ApiQuery({
     name: 'token',
   })
-  verify(@Req() req: Request) {
+  async verify(@Req() req: Request): Promise<BaseResponse<MessageResponse>> {
     const token = req.query.token as string;
-    return this.authService.verify(token);
+    const message = await this.authService.verify(token);
+    return {
+      data: message,
+    };
   }
 
   @Post('login')
@@ -76,8 +97,16 @@ export class AuthController {
     description: 'The user has been login successfully',
     type: Auth,
   })
-  login(@Body() loginAuthDto: LoginAuthDto, @Res() res: Response) {
-    return this.authService.login(loginAuthDto, res);
+  async login(
+    @Body() loginAuthDto: LoginAuthDto,
+    @Res() res: JsonResponse<AuthTokenResponse>,
+  ) {
+    const accessToken = await this.authService.login(loginAuthDto, res);
+    return res.status(HttpStatus.OK).json({
+      data: {
+        accessToken,
+      },
+    });
   }
 
   @Get('refresh-token')
@@ -87,9 +116,16 @@ export class AuthController {
     description: 'The user has been refresh token successfully',
     type: Auth,
   })
-  refreshToken(@Req() req: Request, @Res() res: Response) {
-    const { user } = req;
-    return this.authService.refreshToken(user, res);
+  async refreshToken(
+    @GetUser() jwtPayload: UserPayload,
+    @Res() res: JsonResponse<AuthTokenResponse>,
+  ) {
+    const accessToken = await this.authService.refreshToken(jwtPayload, res);
+    return res.status(HttpStatus.OK).json({
+      data: {
+        accessToken,
+      },
+    });
   }
 
   @Delete('logout')
@@ -98,8 +134,11 @@ export class AuthController {
     status: 200,
     description: 'The user has been logout successfully',
   })
-  logout(@Res() res: Response) {
-    return this.authService.logout(res);
+  logout(@Res() res: JsonResponse<MessageResponse>) {
+    const message = this.authService.logout(res);
+    return res.status(HttpStatus.OK).json({
+      data: message,
+    });
   }
 
   @Get('me')
@@ -110,7 +149,10 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiBearerAuth('defaultBearerAuth')
-  me(@GetUser() jwtPayload: UserPayload) {
-    return this.authService.me(jwtPayload);
+  async me(@GetUser() jwtPayload: UserPayload): Promise<BaseResponse<User>> {
+    const user = await this.authService.me(jwtPayload);
+    return {
+      data: user,
+    };
   }
 }

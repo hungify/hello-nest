@@ -4,7 +4,7 @@
 
 @accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwidXNlcklkIjoxLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzMwNzE2OTMsImV4cCI6MTY3MzA3NTI5M30.yyqOGcnA8P_MtAj1BmBKlv2JjjpoBg4aUG8geWAdmGs
 @refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwidXNlcklkIjoxLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzMwNzM2MDQsImV4cCI6MTY3MzI0NjQwNH0.6VZpDNBITH6Nq6alYAOqfUI0iSzQbc6j6DOL8WoVNKA
-@verifyToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOiIyMDIzLTAyLTI0VDAxOjM1OjE1LjIzNloiLCJ1cGRhdGVkQXQiOiIyMDIzLTAyLTI0VDAxOjM1OjE1LjIzNloiLCJjcmVhdGVkQnkiOm51bGwsInVzZXJJZCI6MSwiZnVsbE5hbWUiOiJFeGFtcGxlIiwiZW1haWwiOiJubWh1bmcuZGV2QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJGFyZ29uMmlkJHY9MTkkbT02NTUzNix0PTMscD00JEFBQUFBQUFBQUFBQUFBJHdTa25Rc1lrdVJxMHgvUThzZFdZRVhoaGhvZjN2and6YVFhTEVBc1p1aEkiLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzcyMzIyNzIsImV4cCI6MTY3NzIzNTg3Mn0.Kp-zkKx-QAMxajLI2u2t58xeFUyozgvJRdd5vsKYuo0
+@verifyToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5taHVuZy5kZXZAZ21haWwuY29tIiwidXNlcklkIjoxLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InVzZXIiLCJpYXQiOjE2Nzc1Njk0MzksImV4cCI6MTY3NzU3MzAzOX0.GIJk1fkf08rbVNrzxnPtNw6-Jrgiwmw85e9QFsHck2Q
 
 @email=nmhung.dev@gmail.com
 
@@ -30,16 +30,15 @@ Content-Type: application/json
 GET {{baseUrl}}/{{resouceName}}/verify?token={{verifyToken}} HTTP/1.1
 Content-Type: application/json
 
-
 ###
 
 # @name Login
-POST {{baseUrl}}/{{resouceName}}/login  HTTP/1.1
+POST 																																															{{baseUrl}}/{{resouceName}}/login  HTTP/1.1
 Content-Type: application/json
 
 {
-		"email": "nmhung.dev@gmail.com",
-		"password": "example"
+	"email": "nmhung.dev@gmail.com",
+	"password": "example"
 }
 
 ###

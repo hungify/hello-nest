@@ -1,5 +1,5 @@
-export interface ResponseFormat<T> {
+export interface ResponseFormat<T, M = Record<string, never>> {
   statusCode: number;
-  message: string;
   data: T;
+  meta?: M;
 }
