@@ -10,7 +10,7 @@ import type { CookieOptions, Response } from 'express';
 import ms from 'ms';
 import type { SecurityConfig } from '~/common/interfaces';
 import type { TokenType, UserPayload } from '~/auth/interfaces/auth.interface';
-import type { User } from '../../users/entities/user.entity';
+import type { UserEntity } from '../../users/entities/user.entity';
 
 @Injectable()
 export class AuthHelper {
@@ -19,7 +19,7 @@ export class AuthHelper {
     private readonly configService: ConfigService,
   ) {}
 
-  getUserPayloadFromUser(user: User): UserPayload {
+  getUserPayloadFromUser(user: UserEntity): UserPayload {
     return {
       email: user.email,
       userId: user.userId,

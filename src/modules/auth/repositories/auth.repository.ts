@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { User } from '~/modules/users/entities/user.entity';
+import { UserEntity } from '~/modules/users/entities/user.entity';
 import type { RegisterAuthDto } from '../dto';
 
 @Injectable()
 export class AuthRepository {
   constructor(
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
   create(registerAuthDto: RegisterAuthDto) {
@@ -16,7 +16,7 @@ export class AuthRepository {
     return this.usersRepository.save(user);
   }
 
-  findOne(email: string, conditions?: FindOptionsWhere<User>) {
+  findOne(email: string, conditions?: FindOptionsWhere<UserEntity>) {
     return this.usersRepository.findOne({ where: { email, ...conditions } });
   }
 }

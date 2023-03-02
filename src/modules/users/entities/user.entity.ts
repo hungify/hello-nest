@@ -4,7 +4,7 @@ import { BaseModel } from 'src/common/models/base.model';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' }) // SQL table name will be 'users'
-export class User extends BaseModel {
+export class UserEntity extends BaseModel {
   @PrimaryGeneratedColumn()
   userId: number;
 

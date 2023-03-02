@@ -5,7 +5,7 @@ import {
   Get,
   HttpStatus,
   Post,
-  Req,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -16,23 +16,20 @@ import {
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-  getSchemaPath,
 } from '@nestjs/swagger';
-import type { Request } from 'express';
 import { GetUser } from '~/common/decorators/user.decorator';
-import type {
+import {
   BaseResponse,
-  MessageResponse,
   JsonResponse,
+  MessageResponse,
 } from '~/common/dto/base-response.dto';
-import { User } from '../users/entities/user.entity';
+import { UserEntity } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
-import type { AuthTokenResponse } from './dto/auth-response.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { AccessTokenGuard, RefreshTokenGuard } from './guards';
 import type { UserPayload } from './interfaces/auth.interface';
-import { Auth } from './models/auth.model';
+import { AuthTokenResponse } from './models/auth.model';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,10 +41,7 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created.',
-    type: User,
-    schema: {
-      $ref: getSchemaPath(RegisterAuthDto),
-    },
+    type: MessageResponse,
   })
   async register(
     @Body() registerAuthDto: RegisterAuthDto,
@@ -60,18 +54,18 @@ export class AuthController {
   }
 
   @Post('resend-email')
+  @ApiQuery({
+    name: 'email',
+    type: String,
+  })
   @ApiResponse({
-    status: 201,
-    description: 'The user has been successfully created.',
-    type: User,
-    schema: {
-      $ref: getSchemaPath(RegisterAuthDto),
-    },
+    status: 200,
+    description: 'The email has been successfully sent.',
+    type: MessageResponse,
   })
   async resendEmail(
-    @Req() req: Request,
+    @Query('email') email: string,
   ): Promise<BaseResponse<MessageResponse>> {
-    const email = req.query.email as string;
     const message = await this.authService.register({ email });
     return {
       data: message,
@@ -81,9 +75,16 @@ export class AuthController {
   @Get('verify')
   @ApiQuery({
     name: 'token',
+    type: String,
   })
-  async verify(@Req() req: Request): Promise<BaseResponse<MessageResponse>> {
-    const token = req.query.token as string;
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been verified successfully',
+    type: MessageResponse,
+  })
+  async verify(
+    @Query('token') token: string,
+  ): Promise<BaseResponse<MessageResponse>> {
     const message = await this.authService.verify(token);
     return {
       data: message,
@@ -95,7 +96,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'The user has been login successfully',
-    type: Auth,
+    type: AuthTokenResponse,
   })
   async login(
     @Body() loginAuthDto: LoginAuthDto,
@@ -114,7 +115,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'The user has been refresh token successfully',
-    type: Auth,
+    type: AuthTokenResponse,
   })
   async refreshToken(
     @GetUser() jwtPayload: UserPayload,
@@ -133,6 +134,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'The user has been logout successfully',
+    type: MessageResponse,
   })
   logout(@Res() res: JsonResponse<MessageResponse>) {
     const message = this.authService.logout(res);
@@ -146,10 +148,13 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'The user has been get successfully',
+    type: UserEntity,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiBearerAuth('defaultBearerAuth')
-  async me(@GetUser() jwtPayload: UserPayload): Promise<BaseResponse<User>> {
+  async me(
+    @GetUser() jwtPayload: UserPayload,
+  ): Promise<BaseResponse<UserEntity>> {
     const user = await this.authService.me(jwtPayload);
     return {
       data: user,

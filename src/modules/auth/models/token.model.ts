@@ -5,19 +5,19 @@ export class Token {
     type: String,
     description: 'The JWT token',
   })
-  idToken: string;
+  idToken?: string;
 
   @ApiProperty({
     type: String,
     description: 'The access token',
   })
-  accessToken: string;
+  accessToken?: string;
 
   @ApiProperty({
     type: String,
     description: 'The refresh token',
   })
-  refreshToken: string;
+  refreshToken?: string;
 
   constructor(partial: Partial<Token>) {
     Object.assign(this, partial);

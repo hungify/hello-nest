@@ -4,7 +4,7 @@ import { Action } from '~/common/enums/action.enum';
 import { AccessTokenGuard } from '~/auth/guards';
 import { AbilityFactory } from '../abilities/ability.factory';
 import type { CreateUserDto } from './dto/createUser.dto';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -17,10 +17,10 @@ export class UsersController {
 
   @Post()
   async create(@Body() { email }: CreateUserDto) {
-    const user = await User.findOne({ where: { email: email } });
+    const user = await UserEntity.findOne({ where: { email: email } });
     const ability = this.abilityFactory.defineAbilitiesFor(user);
 
-    ForbiddenError.from(ability).throwUnlessCan(Action.CREATE, User);
+    ForbiddenError.from(ability).throwUnlessCan(Action.CREATE, UserEntity);
     return {
       message: 'You can create a user',
     };
@@ -28,7 +28,7 @@ export class UsersController {
 
   @Get()
   async findAll() {
-    const users = await User.find();
+    const users = await UserEntity.find();
     return users;
   }
 }
