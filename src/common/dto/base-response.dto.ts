@@ -20,10 +20,7 @@ export class MetaResponse<T, M = any> extends BaseResponse<T> {
 }
 
 export function SwaggerBaseApiResponse<T>(type: T): typeof MetaResponse {
-  class ExtendedBaseApiResponse<T> extends MetaResponse<T> {
-    @ApiProperty({ type })
-    data: T;
-  }
+  class ExtendedBaseApiResponse<T> extends MetaResponse<T> {}
 
   const isAnArray = Array.isArray(type) ? ' [ ] ' : '';
   Object.defineProperty(ExtendedBaseApiResponse, 'name', {

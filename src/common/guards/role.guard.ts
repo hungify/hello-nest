@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, mixin, Type } from '@nestjs/common';
+import {
+  type CanActivate,
+  type ExecutionContext,
+  mixin,
+  type Type,
+} from '@nestjs/common';
 import type { Role } from '../enums';
 import type { Request } from 'express';
 

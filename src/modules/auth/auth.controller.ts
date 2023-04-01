@@ -20,8 +20,8 @@ import {
 import { GetUser } from '~/common/decorators/user.decorator';
 import {
   BaseResponse,
-  JsonResponse,
   MessageResponse,
+  type JsonResponse,
 } from '~/common/dto/base-response.dto';
 import { UserEntity } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';

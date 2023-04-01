@@ -1,7 +1,7 @@
 import {
   AbilityBuilder,
   createMongoAbility,
-  ExtractSubjectType,
+  type ExtractSubjectType,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import type { UserPayload } from '~/auth/interfaces/auth.interface';

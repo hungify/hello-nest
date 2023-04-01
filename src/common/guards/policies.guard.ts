@@ -1,4 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  type CanActivate,
+  type ExecutionContext,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 import type { AppAbility } from '~/modules/abilities/abilities.interface';
@@ -20,7 +24,7 @@ export class PoliciesGuard implements CanActivate {
         context.getHandler(),
       ) || [];
 
-    const { user } = context.switchToHttp().getRequest() satisfies Request;
+    const { user } = context.switchToHttp().getRequest() as Request;
     const ability = this.abilityFactory.defineAbilitiesFor(user);
 
     return policyHandlers.every((handler) =>
