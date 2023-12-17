@@ -1,0 +1,93 @@
+version: '3.9'
+services:
+  # nest-api:
+  #   container_name: nest-api
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - .:/home/app
+  #     - /home/app/node_modules
+  #   command: yarn start:dev
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - CHOKIDAR_USEPOLLING=true
+  #     # APP
+  #     - NODE_ENV=${NODE_ENV}
+
+  #     #CLIENT
+  #     - BASE_CLIENT_URL=${BASE_CLIENT_URL}
+
+  #     # HTTP
+  #     - HOST=${HOST}
+  #     - PORT=${PORT}
+  #     - TIMEOUT=${TIMEOUT}
+
+  #       # DATABASE
+  #     - POSTGRES_USER=${POSTGRES_USER}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #     - POSTGRES_HOST=${POSTGRES_HOST}
+  #     - POSTGRES_PORT=${POSTGRES_PORT}
+  #     - POSTGRES_DB=${POSTGRES_DB}
+
+  #     # LOGGER
+  #     - LOG_DIR=${LOG_DIR}
+  #     - LOG_LEVEL=${LOG_LEVEL}
+
+  #     # JWT
+  #     - SALT_ROUNDS=${SALT_ROUNDS}
+  #     - API_KEY=${API_KEY}
+  #     - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+  #     - ACCESS_TOKEN_EXPIRES_IN=${ACCESS_TOKEN_EXPIRES_IN}
+  #     - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+  #     - REFRESH_TOKEN_EXPIRES_IN=${REFRESH_TOKEN_EXPIRES_IN}
+
+  #     # SWAGGER
+  #     - SWAGGER_PATH=${SWAGGER_PATH}
+  #     - SWAGGER_TITLE=${SWAGGER_TITLE}
+  #     - SWAGGER_DESCRIPTION=${SWAGGER_DESCRIPTION}
+  #     - SWAGGER_VERSION=${SWAGGER_VERSION}
+  #     - SWAGGER_TAG=${SWAGGER_TAG}
+
+  #     # CORS will enable the CORS on production
+  #     - CORS_ORIGIN=${CORS_ORIGIN}
+
+  #     # EMAIL
+  #     - GMAIL_USER=${GMAIL_USER}
+  #     - GMAIL_PASSWORD=${GMAIL_PASSWORD}
+
+  #   ports:
+  #     - ${PORT}:${PORT}
+  #     - 9229:9229
+  #   restart: unless-stopped
+  #   links:
+  #     - db
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - db-network
+
+  pg:
+    image: postgres:14-alpine
+    restart: always
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    networks:
+      - postgres
+    volumes:
+      - .docker/data/postgres:/data/postgres
+
+  networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
