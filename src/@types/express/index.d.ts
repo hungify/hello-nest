@@ -1,4 +1,4 @@
-import type { UserPayload } from '~/auth/interfaces/auth.interface';
+import { UserPayload } from '~/modules/auth/types/payload';
 
 declare global {
   namespace Express {
