@@ -10,7 +10,7 @@ import { ValidationError, useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { setupApiCors } from './common/setups/cors.setup';
-import { setupApiDocs } from './common/setups/docs.setup';
+import { setupApiSwagger } from './common/setups/swagger.setup';
 import { setupApiExternalMiddlewares } from './common/setups/middleware.setup';
 
 async function bootstrap() {
@@ -22,7 +22,7 @@ async function bootstrap() {
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  setupApiDocs(app);
+  setupApiSwagger(app);
   setupApiCors(app);
   setupApiExternalMiddlewares(app);
 
