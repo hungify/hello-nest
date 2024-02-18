@@ -85,7 +85,7 @@ services:
     volumes:
       - .docker/data/postgres:/data/postgres
 
-  networks:
+networks:
   postgres:
     driver: bridge
 
