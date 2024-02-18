@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpConfig, SwaggerConfig } from '../types/config.type';
 
-export const setupApiDocs = (app: INestApplication) => {
+export const setupApiSwagger = (app: INestApplication) => {
   const configService = app.get(ConfigService);
   const swaggerConfig = configService.get<SwaggerConfig>('swagger');
   const { host } = configService.get<HttpConfig>('http');
@@ -23,6 +23,7 @@ export const setupApiDocs = (app: INestApplication) => {
         in: 'header',
       })
       .build();
+
     const document = SwaggerModule.createDocument(app, options, {
       ignoreGlobalPrefix: true,
     });
@@ -32,7 +33,9 @@ export const setupApiDocs = (app: INestApplication) => {
       swaggerOptions: {
         tagsSorter: 'alpha',
         operationsSorter: 'alpha',
+        persistAuthorization: true,
       },
     });
+    // SwaggerModule.setup('api', app, document);
   }
 };
