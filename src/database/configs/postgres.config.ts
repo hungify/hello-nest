@@ -2,13 +2,12 @@ import { registerAs } from '@nestjs/config';
 import path from 'path';
 import type { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-interface ConnectionOptions extends PostgresConnectionOptions {
+export interface PostgresConnectionConfig extends PostgresConnectionOptions {
   keepConnectionAlive: boolean;
 }
 
-export default registerAs(
-  'postgres',
-  (): ConnectionOptions => ({
+export default registerAs('postgres', (): PostgresConnectionConfig => {
+  return {
     host: process.env.POSTGRES_HOST,
     port: parseInt(process.env.POSTGRES_PORT, 10),
     username: process.env.POSTGRES_USER,
@@ -22,5 +21,5 @@ export default registerAs(
     migrationsRun: true,
     migrationsTableName: 'migrations',
     type: 'postgres',
-  }),
-);
+  };
+});

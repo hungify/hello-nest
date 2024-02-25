@@ -1,7 +1,7 @@
-import { type DynamicModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource, type DataSourceOptions } from 'typeorm';
+import { AppConfig } from '~/common/types/config.type';
 import postgresConnectionConfig from './configs/postgres.config';
 
 @Module({
@@ -14,22 +14,12 @@ import postgresConnectionConfig from './configs/postgres.config';
         }),
       ],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return configService.get('postgres');
+      useFactory: (configService: ConfigService<AppConfig>) => {
+        return configService.get('postgres', {
+          infer: true,
+        });
       },
     }),
   ],
 })
-export class DatabaseModule {
-  static register(options: DataSourceOptions): DynamicModule {
-    return {
-      module: DatabaseModule,
-      providers: [
-        {
-          provide: 'CONNECTION',
-          useValue: new DataSource(options),
-        },
-      ],
-    };
-  }
-}
+export class DatabaseModule {}

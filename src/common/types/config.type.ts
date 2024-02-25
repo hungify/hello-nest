@@ -1,9 +1,11 @@
-export interface CorsConfig {
+import { PostgresConnectionConfig } from '~/database/configs/postgres.config';
+
+interface CorsConfig {
   isEnabled: boolean;
   origin: string | string[];
 }
 
-export interface SwaggerConfig {
+interface SwaggerConfig {
   isEnabled: boolean;
   title: string;
   description: string;
@@ -12,7 +14,7 @@ export interface SwaggerConfig {
   tag: string;
 }
 
-export interface SecurityConfig {
+interface SecurityConfig {
   saltRounds: number;
   accessTokenSecret: string;
   accessTokenExpiresIn: string;
@@ -20,18 +22,18 @@ export interface SecurityConfig {
   refreshTokenExpiresIn: string;
 }
 
-export interface LoggerConfig {
+interface LoggerConfig {
   level: string;
   logDir: string;
 }
 
-export interface HttpConfig {
+interface HttpConfig {
   host: string;
   port: number;
   timeout: number;
 }
 
-export interface GmailConfig {
+interface GmailConfig {
   user: string;
   password: string;
   clientId: string;
@@ -39,13 +41,17 @@ export interface GmailConfig {
   refreshToken: string;
   redirectUri: string;
 }
+
+type NodeEnv = 'development' | 'production' | 'test';
+
 export interface AppConfig {
   http: HttpConfig;
   cors: CorsConfig;
   swagger: SwaggerConfig;
   security: SecurityConfig;
   logger: LoggerConfig;
-  nodeEnv: 'development' | 'production' | 'test';
+  nodeEnv: NodeEnv;
   baseClientUrl: string;
   gmail: GmailConfig;
+  postgres: PostgresConnectionConfig;
 }

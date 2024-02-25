@@ -1,14 +1,14 @@
+import { AppConfig } from '~/common/types/config.type';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SendMailOptions, createTransport } from 'nodemailer';
-import { GmailConfig } from '~/common/types/config.type';
 
 @Injectable()
 export class EmailHelper {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService<AppConfig>) {}
 
   async sendEmail(sendMailOptions: SendMailOptions) {
-    const gmail = this.configService.get<GmailConfig>('gmail');
+    const gmail = this.configService.get('gmail', { infer: true });
 
     const transporter = createTransport({
       service: 'gmail',

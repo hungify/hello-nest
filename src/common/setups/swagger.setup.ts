@@ -1,12 +1,12 @@
+import { AppConfig } from '~/common/types/config.type';
 import type { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpConfig, SwaggerConfig } from '../types/config.type';
 
 export const setupApiSwagger = (app: INestApplication) => {
-  const configService = app.get(ConfigService);
-  const swaggerConfig = configService.get<SwaggerConfig>('swagger');
-  const { host } = configService.get<HttpConfig>('http');
+  const configService = app.get(ConfigService<AppConfig>);
+  const swaggerConfig = configService.get('swagger', { infer: true });
+  const { host } = configService.get('http', { infer: true });
 
   if (swaggerConfig.isEnabled) {
     const options = new DocumentBuilder()
