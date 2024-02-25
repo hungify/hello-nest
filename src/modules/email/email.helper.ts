@@ -7,7 +7,7 @@ import { SendMailOptions, createTransport } from 'nodemailer';
 export class EmailHelper {
   constructor(private readonly configService: ConfigService<AppConfig>) {}
 
-  async sendEmail(sendMailOptions: SendMailOptions) {
+  sendEmail(sendMailOptions: SendMailOptions) {
     const gmail = this.configService.get('gmail', { infer: true });
 
     const transporter = createTransport({
@@ -18,6 +18,6 @@ export class EmailHelper {
         pass: gmail.password,
       },
     });
-    return await transporter.sendMail(sendMailOptions);
+    return transporter.sendMail(sendMailOptions);
   }
 }
