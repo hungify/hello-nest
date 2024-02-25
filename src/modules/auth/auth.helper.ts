@@ -10,13 +10,13 @@ import type { CookieOptions, Response } from 'express';
 import ms from 'ms';
 import { TokenType, UserPayload } from './types/payload';
 import { UserEntity } from '../users/entities/user.entity';
-import { SecurityConfig } from '~/common/types/config.type';
+import { AppConfig } from '~/common/types/config.type';
 
 @Injectable()
 export class AuthHelper {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<AppConfig>,
   ) {}
 
   getUserPayloadFromUser(user: UserEntity): UserPayload {
@@ -30,8 +30,9 @@ export class AuthHelper {
 
   async signInTokenAndSetCookie(payload: UserPayload, res: Response) {
     const nodeEnv = this.configService.get<string>('nodeEnv');
-    const { refreshTokenExpiresIn } =
-      this.configService.get<SecurityConfig>('security');
+    const { refreshTokenExpiresIn } = this.configService.get('security', {
+      infer: true,
+    });
 
     const cookieOptions: CookieOptions = {
       httpOnly: true,
@@ -61,7 +62,9 @@ export class AuthHelper {
       refreshTokenExpiresIn,
       accessTokenExpiresIn,
       accessTokenSecret,
-    } = this.configService.get<SecurityConfig>('security');
+    } = this.configService.get('security', {
+      infer: true,
+    });
 
     const expiresIn =
       type === 'accessToken' ? accessTokenExpiresIn : refreshTokenExpiresIn;

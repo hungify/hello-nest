@@ -12,6 +12,7 @@ import { LoginAuthDto } from './dtos/login-auth.dto';
 import { UserPayload } from './types/payload';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
 import { EmailService } from '../email/email.service';
+import { AppConfig } from '~/common/types/config.type';
 
 @Injectable()
 export class AuthService {
@@ -19,12 +20,14 @@ export class AuthService {
     private readonly authRepository: AuthRepository,
     private readonly passwordService: PasswordService,
     private readonly authHelper: AuthHelper,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<AppConfig>,
     private readonly emailService: EmailService,
   ) {}
 
   async sendVerifyEmail(email: string, token: string) {
-    const baseClientUrl = this.configService.get<string>('baseClientUrl');
+    const baseClientUrl = this.configService.get('baseClientUrl', {
+      infer: true,
+    });
 
     const verifyUrl = `${baseClientUrl}/auth/verify?token=${token}&email=${email}`;
 

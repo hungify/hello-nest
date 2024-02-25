@@ -5,7 +5,7 @@ import {
   HttpHealthIndicator,
   HealthCheck,
 } from '@nestjs/terminus';
-import { AppConfig, HttpConfig } from '~/common/types/config.type';
+import { AppConfig } from '~/common/types/config.type';
 
 @Controller('health')
 export class HealthController {
@@ -18,7 +18,7 @@ export class HealthController {
   @Get()
   @HealthCheck()
   check() {
-    const { host, port } = this.configService.get<HttpConfig>('http');
+    const { host, port } = this.configService.get('http', { infer: true });
     const url = `http://${host}:${port}/api`;
     return this.health.check([() => this.http.pingCheck('api', url)]);
   }
