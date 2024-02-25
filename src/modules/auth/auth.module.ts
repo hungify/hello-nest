@@ -4,21 +4,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { EmailService } from './email.service';
-import { AuthHelper } from './helpers/auth.helper';
 import { PasswordService } from './password.service';
-import { AuthRepository } from './repositories/auth.repository';
-import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
+import { AuthRepository } from './auth.repository';
+import { AuthHelper } from './auth.helper';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
+import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
+import { EmailModule } from '../email/email.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],
+  imports: [
+    EmailModule,
+    TypeOrmModule.forFeature([UserEntity]),
+    JwtModule.register({}),
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,
     AuthRepository,
     PasswordService,
     AuthHelper,
-    EmailService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
   ],

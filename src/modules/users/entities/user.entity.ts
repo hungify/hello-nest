@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
-import { BaseModel } from 'src/common/models/base.model';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AdditionalBaseEntity } from '~/common/entities/core.entity';
 
-@Entity({ name: 'users' }) // SQL table name will be 'users'
-export class UserEntity extends BaseModel {
+@Entity({ name: 'users' })
+export class UserEntity extends AdditionalBaseEntity {
   @PrimaryGeneratedColumn()
   userId: number;
 

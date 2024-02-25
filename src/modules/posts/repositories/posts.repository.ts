@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, type RemoveOptions, type FindOneOptions } from 'typeorm';
-import type { CreatePostDto, UpdatePostDto } from '../dto';
 import { PostEntity } from '../entities/post.entity';
+import { CreatePostDto } from '../dtos/create-post.dto';
+import { UpdatePostDto } from './update-post.dto';
 
 @Injectable()
 export class PostRepository {

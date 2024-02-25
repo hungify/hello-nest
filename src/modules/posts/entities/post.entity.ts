@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseModel } from '~/common/models/base.model';
+import { AdditionalBaseEntity } from '~/common/entities/core.entity';
 
 @Entity({ name: 'posts' }) // SQL table name will be 'users'
-export class PostEntity extends BaseModel {
+export class PostEntity extends AdditionalBaseEntity {
   @PrimaryGeneratedColumn()
   postId: number;
 
