@@ -33,10 +33,7 @@ export class EmailService implements IEmailService {
       this.emailHelper.sendEmail(info);
       return true;
     } catch (error) {
-      if (error instanceof Error) {
-        throw new InternalServerErrorException(error.message);
-      }
-      return false;
+      throw new InternalServerErrorException(error.message);
     }
   }
   async forgotPassword({ email, subject, verifyUrl }: EmailForgotPasswordDto) {
@@ -56,10 +53,7 @@ export class EmailService implements IEmailService {
       this.emailHelper.sendEmail(info);
       return true;
     } catch (error) {
-      if (error instanceof Error) {
-        throw new InternalServerErrorException(error.message);
-      }
-      return false;
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
