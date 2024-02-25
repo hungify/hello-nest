@@ -30,7 +30,7 @@ export class EmailService implements IEmailService {
         html: mustache.render(html, { link: verifyUrl }),
       };
 
-      this.emailHelper.sendEmail(info);
+      await this.emailHelper.sendEmail(info);
       return true;
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -50,8 +50,7 @@ export class EmailService implements IEmailService {
         html: mustache.render(html, { link: verifyUrl }),
       };
 
-      this.emailHelper.sendEmail(info);
-      return true;
+      await this.emailHelper.sendEmail(info);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
