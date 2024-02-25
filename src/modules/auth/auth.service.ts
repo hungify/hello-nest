@@ -5,13 +5,14 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
-import type { LoginAuthDto } from './dto/login-auth.dto';
-import type { RegisterAuthDto } from './dto/register-auth.dto';
-import { EmailService } from './email.service';
-import { AuthHelper } from './helpers/auth.helper';
-import type { UserPayload } from './interfaces/auth.interface';
 import { PasswordService } from './password.service';
-import { AuthRepository } from './repositories/auth.repository';
+import { AuthHelper } from './auth.helper';
+import { AuthRepository } from './auth.repository';
+import { LoginAuthDto } from './dtos/login-auth.dto';
+import { UserPayload } from './types/payload';
+import { RegisterAuthDto } from './dtos/register-auth.dto';
+import { EmailService } from '../email/email.service';
+import { AppConfig } from '~/common/types/config.type';
 
 @Injectable()
 export class AuthService {
@@ -19,20 +20,21 @@ export class AuthService {
     private readonly authRepository: AuthRepository,
     private readonly passwordService: PasswordService,
     private readonly authHelper: AuthHelper,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<AppConfig>,
     private readonly emailService: EmailService,
   ) {}
 
   async sendVerifyEmail(email: string, token: string) {
-    const baseClientUrl = this.configService.get<string>('baseClientUrl');
+    const baseClientUrl = this.configService.get('baseClientUrl', {
+      infer: true,
+    });
 
     const verifyUrl = `${baseClientUrl}/auth/verify?token=${token}&email=${email}`;
 
-    return this.emailService.sendEmail({
+    return this.emailService.register({
       verifyUrl,
       email,
       subject: 'Verify your email',
-      type: 'register',
     });
   }
 

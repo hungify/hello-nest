@@ -17,19 +17,20 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GetUser } from '~/common/decorators/user.decorator';
+import { RegisterAuthDto } from './dtos/register-auth.dto';
 import {
   BaseResponse,
+  JsonResponse,
   MessageResponse,
-  type JsonResponse,
-} from '~/common/dto/base-response.dto';
-import { UserEntity } from '../users/entities/user.entity';
-import { AuthService } from './auth.service';
-import { LoginAuthDto } from './dto/login-auth.dto';
-import { RegisterAuthDto } from './dto/register-auth.dto';
-import { AccessTokenGuard, RefreshTokenGuard } from './guards';
-import type { UserPayload } from './interfaces/auth.interface';
+} from '~/common/dtos/base-response.dto';
+import { LoginAuthDto } from './dtos/login-auth.dto';
 import { AuthTokenResponse } from './models/auth.model';
+import { UserPayload } from './types/payload';
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { AccessTokenGuard } from './guards/access-token.guard';
+import { UserEntity } from '../users/entities/user.entity';
+import { GetUser } from '../users/decorators/user.decorator';
+import { AuthService } from './auth.service';
 
 @ApiTags('Auth')
 @Controller('auth')

@@ -10,22 +10,22 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AccessTokenGuard } from '~/auth/guards';
-import { CheckPolicies } from '~/common/decorators';
-import type {
-  BaseResponse,
-  MessageResponse,
-} from '~/common/dto/base-response.dto';
-import { PoliciesGuard } from '~/common/guards';
-import { CreatePostDto, UpdatePostDto } from './dto';
+
 import type { PostEntity } from './entities/post.entity';
+
+import { PostsService } from './posts.service';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import { CheckPolicies } from '../abilities/abilities.decorator';
+import { CreatePostDto } from './dtos/create-post.dto';
+import { BaseResponse, MessageResponse } from '~/common/dtos/base-response.dto';
+import { UpdatePostDto } from './repositories/update-post.dto';
 import {
   CreatePostPolicyHandler,
   DeletePostPolicyHandler,
   ReadPostPolicyHandler,
   UpdatePostPolicyHandler,
-} from './policies';
-import { PostsService } from './posts.service';
+} from './policies/posts.policy';
+import { PoliciesGuard } from '../abilities/ability.guard';
 
 @Controller('posts')
 @ApiTags('Posts')

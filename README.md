@@ -2,6 +2,9 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
   <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
@@ -16,87 +19,54 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Requirements
+## Description
 
-- [Node.js](https://nodejs.org/en/) >= 16.0.0
-- [TypeScript](https://www.typescriptlang.org/) >= 4.8.0
-- [PostgreSQL](https://www.postgresql.org/) >= 9.6.0
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
 
 ```bash
-npm install
+$ pnpm install
 ```
 
 ## Running the app
 
 ```bash
-# development manual
-$ npm run start
+# development
+$ pnpm run start
 
 # watch mode
-$ npm run start:dev
+$ pnpm run start:dev
 
 # production mode
-$ npm run start:prod
-
-# development with docker
-$ docker-compose up
+$ pnpm run start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+$ pnpm run test
 
 # e2e tests
-$ npm run test:e2e
+$ pnpm run test:e2e
 
 # test coverage
-$ npm run test:cov
+$ pnpm run test:cov
 ```
 
-## API Testing
+## Support
 
-1. http-client
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-- Send request inside `http-client` folder, each file is a script to run all
-  endpoint in module.
+## Stay in touch
 
-2. Postman
-
-- Add script to pre-script tab in postman will be add token to header
-  automatically before send request.
-
-```js
-const Host = pm.environment.get('baseUrl');
-const postRequest = {
-  url: `${Host}/auth/login`,
-  method: 'POST',
-  header: {
-    'Content-Type': 'application/json',
-  },
-  body: {
-    mode: 'raw',
-    raw: JSON.stringify({ email: 'example@example.com', password: 'example' }),
-  },
-};
-
-pm.sendRequest(postRequest, (error, response) => {
-  console.log(error ? error : response.json());
-  const res = response.json();
-  pm.globals.set('accessToken', `Bearer ${res.accessToken}`);
-});
-```
-
-3. Postgres
-
-- Connect Postgres with PgAdmin GUI
-- Get the identifier of your Postgres container: `docker ps`
-- Print the IP address of this docker image using its identifier:
-  `Docker inspect Container ID | grep IPAddress`
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 

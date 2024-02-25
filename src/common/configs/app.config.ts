@@ -1,6 +1,6 @@
-import type { AppConfig } from '../interfaces';
+import { AppConfig } from '../types/config.type';
 
-export default (): AppConfig => ({
+export default (): Omit<AppConfig, 'postgres'> => ({
   baseClientUrl: process.env.BASE_CLIENT_URL,
   http: {
     host: process.env.HOST || 'localhost',

@@ -1,32 +1,22 @@
-import {
-  BadRequestException,
-  RequestMethod,
-  ValidationPipe,
-} from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import type { NestExpressApplication } from '@nestjs/platform-express';
-import { useContainer, ValidationError } from 'class-validator';
-import { AppModule } from './app/app.module';
-import { setupApiCors, setupApiDocs } from './common/configs';
-import { setupApiExternalMiddlewares } from './common/configs/middleware.config';
-import { AllExceptionsFilter } from './common/filters';
-import { TimeoutInterceptor } from './common/interceptors';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { ValidationError, useContainer } from 'class-validator';
+import { AppModule } from './app.module';
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { setupApiCors } from './common/setups/cors.setup';
+import { setupApiSwagger } from './common/setups/swagger.setup';
+import { setupApiExternalMiddlewares } from './common/setups/middleware.setup';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    // logger: WinstonModule.createLogger(loggerConfig),
-  });
-  const httpAdapter = app.get(HttpAdapterHost);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
-  // const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
 
-  app.setGlobalPrefix('api', {
-    exclude: [{ path: '/', method: RequestMethod.ALL }],
-  });
+  app.enableVersioning();
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-  setupApiDocs(app);
+  setupApiSwagger(app);
   setupApiCors(app);
   setupApiExternalMiddlewares(app);
 
@@ -43,7 +33,6 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(new TimeoutInterceptor());
 
   await app.listen(configService.get('PORT')).then(() => {
@@ -53,4 +42,4 @@ async function bootstrap() {
   });
 }
 
-bootstrap().catch((err) => console.error('Error: ', err));
+bootstrap().catch((err) => console.error(err));
