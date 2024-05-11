@@ -1,10 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Request } from 'express';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { AppConfig } from '~/common/types/config.type';
 import { UserPayload } from '../types/payload';
+import { UsersService } from '~/modules/users/users.service';
+import { JwtPayload } from 'jsonwebtoken';
+
+const cookieExtractor = (request: Request): string | null => {
+  let token = null;
+  if (request && request.cookies) {
+    token = request.cookies['refreshToken'];
+  }
+  return token;
+};
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -13,21 +23,27 @@ export class RefreshTokenStrategy extends PassportStrategy(
 ) {
   constructor(
     @Inject(ConfigService) configService: ConfigService<AppConfig, false>,
+    @Inject(UsersService) private readonly usersService: UsersService,
   ) {
     const { refreshTokenSecret } = configService.get('security', {
       infer: true,
     });
-
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: true,
+      jwtFromRequest: cookieExtractor,
       secretOrKey: refreshTokenSecret,
-      passReqToCallback: true,
+      ignoreExpiration: false,
     });
   }
 
-  validate(req: Request, payload: UserPayload) {
-    const refreshToken = req.cookies?.refreshToken;
-    return refreshToken ? payload : null;
+  async validate(payload: UserPayload & JwtPayload) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { iat, exp, ...rest } = payload;
+
+    const user = await this.usersService.get(payload.userId);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return rest;
   }
 }
