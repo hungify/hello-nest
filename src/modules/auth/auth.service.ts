@@ -29,10 +29,10 @@ export class AuthService {
       infer: true,
     });
 
-    const verifyUrl = `${baseClientUrl}/auth/verify?token=${token}&email=${email}`;
+    const link = `${baseClientUrl}/auth/verify?token=${token}&email=${email}`;
 
     return this.emailService.register({
-      verifyUrl,
+      link,
       email,
       subject: 'Verify your email',
     });
@@ -75,7 +75,6 @@ export class AuthService {
         'accessToken',
       );
     }
-
     const info = await this.sendVerifyEmail(email, accessToken);
 
     if (!info) throw new UnauthorizedException('Send email failed');
@@ -122,7 +121,7 @@ export class AuthService {
     return accessToken;
   }
 
-  async refreshToken(userPayload: UserPayload, res: Response) {
+  refreshToken(userPayload: UserPayload, res: Response) {
     const newAccessToken = this.authHelper.signInTokenAndSetCookie(
       userPayload,
       res,
