@@ -16,7 +16,7 @@ export class EmailService implements IEmailService {
     private readonly emailHelper: EmailHelper,
   ) {}
 
-  async register({ email, subject, verifyUrl }: EmailRegisterDto) {
+  async register({ email, subject, link }: EmailRegisterDto) {
     try {
       const templatePath = path.join(__dirname, 'templates', 'register.html');
       const html = fs.readFileSync(templatePath, 'utf8');
@@ -27,7 +27,7 @@ export class EmailService implements IEmailService {
         from: `Application name 👻 ${gmail.user}`,
         to: email,
         subject: subject,
-        html: mustache.render(html, { link: verifyUrl }),
+        html: mustache.render(html, { link }),
       };
 
       await this.emailHelper.sendEmail(info);
@@ -36,7 +36,7 @@ export class EmailService implements IEmailService {
       throw new InternalServerErrorException(error.message);
     }
   }
-  async forgotPassword({ email, subject, verifyUrl }: EmailForgotPasswordDto) {
+  async forgotPassword({ email, subject, link }: EmailForgotPasswordDto) {
     try {
       const templatePath = path.join(__dirname, 'templates', 'register.html');
       const html = fs.readFileSync(templatePath, 'utf8');
@@ -47,7 +47,7 @@ export class EmailService implements IEmailService {
         from: `Application name 👻 ${gmail.user}`,
         to: email,
         subject: subject,
-        html: mustache.render(html, { link: verifyUrl }),
+        html: mustache.render(html, { link }),
       };
 
       await this.emailHelper.sendEmail(info);

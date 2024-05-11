@@ -10,5 +10,5 @@ export class EmailRegisterDto {
 
   @IsString()
   @IsNotEmpty()
-  verifyUrl: string;
+  link: string;
 }

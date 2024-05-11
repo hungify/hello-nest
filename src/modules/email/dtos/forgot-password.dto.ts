@@ -10,5 +10,5 @@ export class EmailForgotPasswordDto {
 
   @IsString()
   @IsNotEmpty()
-  verifyUrl: string;
+  link: string;
 }
