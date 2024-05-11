@@ -5,7 +5,6 @@ import {
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { AppAbility, AppSubjects } from './abilities.type';
-import { UserPayload } from '../auth/types/payload';
 import { UserEntity } from '../users/entities/user.entity';
 import { AppRole } from '~/common/enums/role.enum';
 import { AppAction } from '~/common/enums/action.enum';
@@ -13,7 +12,7 @@ import { PostEntity } from '~/modules/posts/entities/post.entity';
 
 @Injectable()
 export class AbilityFactory {
-  defineAbilitiesFor(user: UserPayload) {
+  defineAbilitiesFor(user: Express.User) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(
       createMongoAbility,
     );
